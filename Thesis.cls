@@ -165,7 +165,7 @@
 \newcommand*{\keywords}[1]{\def\keywordnames{#1}}
 \supervisor  {}
 \examiner    {}
-\degree      {Doctor of Philosophy}
+\degree      {Master of Science(Computer Science)}
 \authors     {}
 \university  {\texorpdfstring{\href{University Web Site URL Here (include http://)}
                 {The University of Melbourne}}
@@ -225,8 +225,8 @@
       \smallskip
       {\LARGE \authornames \par}
       \vfill
-      {\large A thesis submitted in total fulfillment for the \par}
-      {\large degree of Doctor of Philosophy \par}
+      {\large A thesis submitted in fulfillment for the \par}
+      {\large degree of Master of Science(Computer Science) \par}
       \bigskip
       \bigskip
       {\large in the \par}
@@ -270,7 +270,7 @@
     {\normalsize \deptname \par}
     {\normalsize \schoolname \par}
     \bigskip
-    {\normalsize Doctor of Philosophy\par}
+    {\normalsize Master of Science(Computer Science)\par}
     \bigskip
     {\normalsize\bf \@title \par}
     \medskip

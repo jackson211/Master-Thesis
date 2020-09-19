@@ -22,7 +22,12 @@
 \usepackage[square, numbers, comma, sort&compress]{natbib}  % Use the "Natbib" style for the references in the Bibliography
 \usepackage{verbatim}  % Needed for the "comment" environment to make LaTeX comments
 \usepackage{vector}  % Allows "\bvec{}" and "\buvec{}" for "blackboard" style bold vectors in maths
+\usepackage[inline]{enumitem}
+\usepackage{fancyhdr}
 \hypersetup{urlcolor=blue, colorlinks=true}  % Colours hyperlinks in blue, but this can be distracting if there are many links.
+
+\usepackage{amsthm}
+\newtheorem{query}{Query}[section]
 
 %% ----------------------------------------------------------------
 \begin{document}
@@ -41,7 +46,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Set up the Title Page
 % Change your thesis title and your information here
-\title  {Learned hashmap for spatial queries}
+\title  {Learned Hashmap For Spatial Queries}
 \authors  {\texorpdfstring
             {\href{haozhans@student.unimelb.edu.au}{Haozhan Shi\\ \small ORCID: }}
             {Author Name}
@@ -140,15 +145,19 @@ $\omega$ & angular frequency & rads$^{-1}$ \\
 %% ----------------------------------------------------------------
 \mainmatter	  % Begin normal, numeric (1,2,3...) page numbering
 \pagestyle{fancy}  % Return the page headers back to the "fancy" style
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\fancyhf{}
+\fancyhead[LO]{\leftmark}
+\fancyhead[R]{\thepage}
 
 % Include the chapters of the thesis, as separate files
 % Just uncomment the lines as you write the chapters
 
 \input{Chapters/Chapter1} % Introduction
 
-%\input{Chapters/Chapter2} % Background Theory 
+\input{Chapters/Chapter2} % Background Theory 
 
-%\input{Chapters/Chapter3} % Experimental Setup
+\input{Chapters/Chapter3} % Experimental Setup
 
 %\input{Chapters/Chapter4} % Experiment 1
 
@@ -161,17 +170,17 @@ $\omega$ & angular frequency & rads$^{-1}$ \\
 %% ----------------------------------------------------------------
 % Now begin the Appendices, including them as separate files
 
-\addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+% \addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
 
-\appendix % Cue to tell LaTeX that the following 'chapters' are Appendices
+% \appendix % Cue to tell LaTeX that the following 'chapters' are Appendices
 
-\input{Appendices/AppendixA}	% Appendix Title
+% \input{Appendices/AppendixA}	% Appendix Title
 
 %\input{Appendices/AppendixB} % Appendix Title
 
 %\input{Appendices/AppendixC} % Appendix Title
 
-\addtocontents{toc}{\vspace{2em}}  % Add a gap in the Contents, for aesthetics
+% \addtocontents{toc}{\vspace{2em}}  % Add a gap in the Contents, for aesthetics
 \backmatter
 
 %% ----------------------------------------------------------------

@@ -1,0 +1,79 @@
+
+\chapter{Proposed Method}
+
+Before we integrate machine learning models on conventional spatial data indexes, we should review the current state-of-art learned indexes and spatial indexes. The most important idea that comes from the learned indexes is to use learned models to predict the possible location of the key. In RMI, a query point is passed into a sequence of learned models to get the final range of location. ALEX improved on RMI using a \textit{Gapped Array} or a \textit{Packed Array} to store data points, instead of searching in a single array. The RMI is more memory efficient compared to ALEX since all the data points are allocated in a contiguous array, whereas ALEX allocates data points at a different location in memory. The PGM-index uses piecewise linear models to create segments of linear models. The number of segments controls the trade-off between time and space. 
+
+We must concede that the learned models can not predict the exact position, there always are errors that come with the predicted value. Reducing the error will rely on more complex computations, but inference cost will also be expensive. The question is how many trade-offs we can afford to build either a time-efficient spatial index or space-efficient spatial index. 
+
+Difficulties of spatial data is the consistency of simultaneity ordered on different dimensions. The ZM’s approach is to combine the Z-order space-filling curve and the RMI model, but it does not guarantee to find data points accurately and it does not support k nearest neighbour query.  The RSMI also adopted Z-order curves to apply to spatial space partitioning. The structure of the RSMI is also similar to the RMI and the R-Tree, because of the recursive model and space partitioning. 
+
+Current learned spatial indexes have a complex hierarchical structure. The hierarchical structure allows the index to handle complex spatial queries. The problem with adopting learned models to the hierarchical structure is the prediction value can have a large error range. The error propagation can be solved by introducing a sub-model to refine search regions. However, it can still cause problems when handling skewed data and error bounds are large. A large error bound can produce overhead on the number of access of sub-trees. As a result, it can degrade query performance. 
+
+\section{Design Goal}
+
+Before investigating methods to build an efficient spatial index, the design goal of the spatial index meet the following requirements:
+\begin{itemize}
+    \item The spatial index must retrieve query points \textbf{accurately}. 
+    \item The spatial index can handle \textbf{Point Match Query}, \textbf{Range Query} and the \textbf{Nearest Neighbour Query}.
+\end{itemize}
+
+
+Firstly, retrieving the query point is the most important function in the spatial index. The Point Match Query is defined in \ref{def:pmq}, it retrieves a data point from the index for a given pair of coordinates. Therefore, accurate point retrieval is a basic and important function of a spatial index. Secondly, one of the major differences between a one-dimensional index and a spatial index is that a spatial index is able to handle spatial specific queries. The Point Match Query is the foundation query for supporting various spatial queries.
+
+
+\textbf{Efficiency} is also an important criterion for measuring the performance of a spatial index. As mentioned above, it is hard to balance the trade-off between time and space. The ideal scenario is to achieve a fast query time with a low memory cost for a spatial index. However, in reality, we sometimes have to sacrifice one for another. The designed spatial index should exploit the space-time trade-off, and try to optimize from at least one aspect. 
+
+Overall, we are focusing on two aspects when designing a spatial index: query result accuracy, complete functionality of spatial query and performance improvement. The following sections describe how a \textit{Learned Hashmap} can be useful in a spatial index and achieve these goals. 
+
+
+\section{The Learned Spatial Hashmap Overview}
+The Learned Spatial Hashmap (LSH) is an efficient learned data index method for storing spatial data and handling spatial queries. The structure of the LSH is straightforward, the main component of the index is a learned hashmap. The learned hashmap is a hashmap with a learned CDF as its hash function \cite{Kraska:2017vh}. The CDF learned from a machine learning model, and used it as a hash function in the hashmap. The design of the LSH building process makes it suitable for storing spatial data points. The build process of the LSH is shown as follows:
+
+\begin{enumerate}
+    \item \textbf{Dimension Selection}: Choosing one dimension from the dataset for model training.
+    \item \textbf{Model Training}: A learned model trains on the selected dimension of data. 
+    \item \textbf{Building of the LSH}: Creating and Inserting to the Hashmap based on the prediction value.
+\end{enumerate}
+
+The learned model in LSH trained only on a single dimension of two-dimensional data points. We select a single dimension of value from a coordinate data pair: $\{n|\forall n \in E.p\}$, where $E$ is every element in the dataset, and $p$ is selected dimension. The dimension selection is based on the  divergent of the values. A more divergent set of values can produce more divergent prediction values  from the same model. Therefore, it will optimize the loading factor of the hashmap, thus improving the efficiency of the lookup speed.
+
+Using simple linear regression to train on data along a selected dimension $p$, with corresponding ranks of the data points, we can estimate a range of candidate positions of the query data point on the $p$ dimension, and trained model $m$. 
+
+A Hashmap will be created with a size of the model prediction range: $\hat{y}_{max} - \hat{y}_{min}$. Insertion is relatively simple, the trained model $m$ inferences the input values from the same selected dimension $p$. Then the trained model yields a prediction value that can be treated as the hash value for the hashmap. Finally, the data point can be inserted into the hashmap at the index of the hash value. 
+
+The building process of the LSH is similar to a regular hashmap. It is simple but yet powerful. Some major differences distinguish itself from a regular hashmap, and suitable for storing and searching spatial objects. The LSH uses only values from one dimension for the entire building procedure. Some properties about the learned hashmap guarantee the performance and accuracy of querying results, it will be discussed in the Section \ref{the_learned_hashmap}. 
+
+
+% \subsection{Index Layout}
+
+% The idea of LSH originates from the RMI. The RMI used a hierarchy structure of recursive models for narrowing the search range at each level. Then we simply assume that if we increase the model in RMI, each of the ‘last mile’ search ranges will be smaller. Although the error bounds can be overlapped at the last step. We can partition the spatial space into many grid cells, similar to the Flood model. If we consider an extreme case that is the number of the grid cells is as large as possible, each grid cell becomes a line. Each of the lines only stores data points that have the same value on the x-axis or y-axis. 
+
+\subsection{Single Dimensional Index Building}
+
+In the LSH, the building process and the initial search range relies on one dimension of data. It is much easier to handle one-dimensional data than multidimensional data. Transformation(space-filling curves, endpoint transformation and midpoint transformation) tends to be a popular choice for transferring multidimensional data into one-dimensional data in many traditional spatial indexes. In spatial data, it is hard to map two-dimensional data into one-dimensional data while preserving the spatial proximity \cite{Gaede:1998fp}. The space-filling curves (SFC) integrate both x-value and y-value into one value, to preserve the locality of points in the space. The calculated SFC values are used to rank the data points. Two closely-ranked data points in sorted order are also located close to each other in the spatial space. However, it requires extra calculations, and more importantly, a learned model can not produce an accurate prediction for the SFC values. 
+
+
+There are some benefits for a spatial index to indexing from a single dimension of data. Training on a single dimension of values preserves the original information about the location, and it is already a one-dimensional data available. As a result, the LHS has a fast query performance, since there is no pre-calculation for the transformation, values from original data can be used directly for inference. The building performance is also fast because of no extra calculation during the building process. 
+
+Training on only a single dimension might also avoid potential data skewness. In most spatial datasets, skewness is most likely to happen in only one dimension. It means if one dimension is skewed, we can check if another dimension is skewed, and the training dimension $p$ is chosen from the less skewed out of two. Although there are some special cases, which values in both dimensions are skewed (such as two clusters of data points). It only creates computation overhead during searching in the chaining, and will not affect the accuracy of query results. 
+
+ The selection of $p$ dimension can affect the space utility in the LSH. A load factor in a hashmap is the ratio between \textit{number of entries} and \textit{size of hashmap}. Performance of the hashmap is largely decided by the load factor \cite{hashmap}. For example, a hashmap with a load factor of $0.5$ represents only half of the slots in the hashmap that are loaded with values. The hashmap in the LSH is created with a size of prediction range, so in general, a high load factor can reduce chaining overhead and increase space utilization. 
+
+
+\section{The Learned Hashmap} \label{the_learned_hashmap}
+
+The learned hashmap has been mentioned in Kraska’s paper \cite{Kafle:2017dy}. He suggested that the learned hash map is no better than traditional hashmaps such as Cuckoo hashing in terms of solving conflict and distributing key mapping. There are some properties of the learned hashmap not mentioned in Kraska's paper, which can be strengths for handling spatial query operations. 
+
+
+\textbf{Small hash collision rate}: According to Kraska, the learned hashmap can reduce hash conflict up to 77\%. The logic behind it is that a randomized hash function is a trend to generate random hash value, whereas the learned CDF can produce a hash value that grows with increase of the input value. Therefore, it is less likely to have hash collisions with learned hash functions.
+
+\textbf{Sorted head node}: Since the prediction result grows linearly with the input value, the order of head nodes in the learned hashmap is sorted. In a set of sorted data, for any values $x\prime$ that are greater than a given input value $x$, the predicted value from the learned CDF function $y\prime = \text{CDF}(x\prime)$ is also greater than the predicted value $y = \text{CDF}(x)$. Kristo \cite{Kristo:2020it} implemented a sorting algorithm based on this property of the learned hashmap. 
+
+\textbf{Load factor depends on model and data distribution}: 
+
+\textbf{Cost of hash function depends on the model}: 
+
+
+\textbf{Guarantee to find value}: 
+
+
