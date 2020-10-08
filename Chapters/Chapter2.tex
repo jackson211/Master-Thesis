@@ -261,20 +261,26 @@ The Augmented Grid can correlate the points within each sub-region. Several diff
 The performance result shows that query time for Tsunami is 6$\times$ faster than Flood and 11$\times$ faster than the traditional index. The index size of the Tsunami is also much less than other indexes. The advantage of Tsunami is that it proposed strategies for data correlation to produce a more uniformly distributed data from a skewed dataset. There is still room for improvements, as mentioned in the paper, functional mapping can not handle outliers very well, the error bound can be enlarged; and the Augmented Grid can not handle higher dimensional data. 
 
 \subsection{qd-tree}
-Qd-tree is a high-dimensional data space partitioning binary tree, which is similar to the k-d tree. The qd-tree approaches the query task from a deep reinforcement learning-based framework. The structure of the qd-tree is built upon the binary tree. Each node in the tree contains data records that belong to the multidimensional data. The root node of the tree holds all the information for the entire dataset. 
+Qd-tree \cite{Yang:2020ev} is a high-dimensional data space partitioning binary tree, which is similar to the k-d tree. The qd-tree approaches the query task from a deep reinforcement learning-based framework. The structure of the qd-tree is built upon the binary tree. Each node in the tree contains data records that belong to the multidimensional data. The root node of the tree holds all the information for the entire dataset. 
 
 The strategy of querying entry in the tree is using a concept of routing data. Data is stored in the blocks on storage. Every record starts routing at the root of the tree, the same as most of the hierarchical structure, the record will recursively traverse down the tree. At each node, the tagged predicate $p$ is evaluated on the record. Each predicate in the node does range comparison ($\{<, \leq, >, \geq\}$) and equality comparison ($=$). A record at the node does a series of range comparisons to decide which leaf (left or right) to go.  Eventually, the record will be landed in the leaf node. The leaf node represents the physical location of the record on the disk. The block ID (\texttt{BID}) is stored along with the record on the leaf, indicating where the record belongs to. 
 
-The Greedy approach is beginning with a single root node that contains all the nodes. Then iterate through all the nodes to split the leaf node that is larger than $2b$ into two children nodes, the size of each of the children nodes is at least $b$. The Greedy approach has been reported to work well to reach the local optimal. The Deep RL method is a black box learning process without assumption on the data distribution or query. The Deep RL agent Woodblock is built on top of the Markov Decision Process (MDP). It defines the state space to be any subspace of entire data space, and action space to be the set of splits. The Woodblock agent contains two parameterized networks: 
+The Greedy approach is beginning with a single root node that contains all the nodes. Then iterate through all the nodes to split the leaf node that is larger than $2b$ into two children nodes, the size of each of the children nodes is at least $b$. The Greedy approach has been reported \cite{Yang:2020ev} to work well to reach the local optimum and may be global suboptimality. 
+
+The Deep RL method is a black box learning process without assumption on the data distribution or query. The Deep RL agent Woodblock is built on top of the Markov Decision Process (MDP). It defines the state space to be any subspace of entire data space, and action space to be the set of splits. The Woodblock agent contains two parameterized networks: 
 \begin{enumerate*}
-  \item policy network, which takes a state and emits a probability distribution over an action space.
-  \item value network, which estimates an expected cumulative reward for a given state.
+    \item \textit{Policy Network}, which takes a state and emits a probability distribution over an action space.
+    \item \textit{Value Network}, which estimates an expected cumulative reward for a given state.
 \end{enumerate*}
-
-
-
 The learning process trained through a series of episodes: 
+\begin{enumerate}
+    \item Starts from a node off from the queue,
+    \item Evaluates the policy at current state,
+    \item Choice an action from the output distribution,
+    \item Applies this action on the current node to produce a new node.
+\end{enumerate}
 
+A stopping condition is necessary for ending the episode training. As it is defined in the tree structure that the leaf node must contain at least $b$ records, the agent will continue to make cuts on the current node if it contains more than $b$ records. Overlapping region existing in the qd-tree. To handle such data redundancy in the leaf node, qd-tree proposed a relaxed cutting condition that allows one of the children nodes to have a size smaller than $b$.  
 
 
 
