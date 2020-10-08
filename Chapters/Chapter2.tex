@@ -7,7 +7,7 @@ The scale of the spatial database system can be large. Presenting multiple types
 
 Properties commonly shared between one-dimensional data index and spatial data index are space and time efficiency. Data indexes are attempting to reduce the operations that are required for accessing the memory. For example, B-Tree \cite{Bayer:2002ds} is organizing data at a physical level to minimize the number of access to disk pages. The size of the data index should also be kept small to maximize storage utilization. 
 
-Overall, designing an efficient, functional and dynamic spatial index requires considering all the tasks above. In the following sections, we will review and analyze some popular techniques in spatial data management systems, and spatial indexes that apply these techniques. 
+Overall, designing an efficient, functional and dynamic spatial index requires considering all the tasks above. In the following sections, we will review the definitions of spatial queries and analyze some popular techniques in spatial data management systems, and spatial indexes that apply these techniques. 
 
 
 
@@ -77,9 +77,7 @@ Multiple layers \cite{Gaede:1998fp} are similar to overlapping regions, since re
 
 \section{Traditional Spatial Data Index}
 
-% Characteristics of multidimensional data is complex. Spatial data is composed of different forms of data: points, lines and polygons, all of data components can have a relationship with each other. Relationships between data shapes are more complex, points can be on a line or the edge of a polygon, and regions can overlap. Regions are spatially joint or disjoint areas, they are grouping as polygons in terms of data structure. Such data structure is difficult to represent in fixed size tuple \cite{Gaede:1998fp}. 
-
-% Multidimensional data management requires special treatment in order to be successful. The need for multidimensional data has been outlined by Gaede \cite{Gaede:1998fp}:Dynamic, Secondary/tertiary storage management, Broad range of supported operations, Independence of input data, Simplicity, Scalability, Time efficiency, Space efficiency, Concurrency and recovery, Minimum impact.
+Characteristics of multidimensional data is complex  \cite{Gaede:1998fp, Robinson:1981id}. Gaede and Robinson have summarized some requirements for spatial indexes: dynamic, secondary storage management, a broad range of supported operations, independence of input data, simplicity, scalability, time efficiency, space efficiency, concurrency and recovery, minimum impact. The following sections introduce some of the popular traditional spatial indexing methods,  illustrate a wide range of techniques, as mentioned above, addressing the requirements for spatial index. 
 
 
 
@@ -119,9 +117,10 @@ The BSP-Tree can handle non-uniformed distributed data well. However, arbitrary 
 
 
 
-\subsection{The Quadtree}
-The quadtree \cite{CSUR:tm} is also considered to be closed to the K-D-Tree. The difference is the quadtree is not a binary tree anymore. The intermediate node in the quadtree will have ${2^d}$ descendants for d dimension. For example, d=2 will have four descendants, which each of the descendants is referred to as a rectangle region. These four descendants can be viewed as quadrants that represent four directions (NW, NE, SW, SE) prospectively. The recursive subdivision will be continued on the rest of the data. Consequently, the quadtree will not be balanced since that more densely the region is deeper the tree will grow. 
-Searching and inserting in the quadtree is similar to other tree structures. New data points will start from the root node, the node will decide one subtree from the four descendants. For point query, there always will be only one candidate subtree for further searching. For range queries, there might be one or more candidate subtrees. The process will continue recursively until finding the goal.
+\subsection{Quadtree}
+The Quadtree \cite{CSUR:tm} is also considered to be closed to the K-D-Tree. The difference is the Quadtree is not a binary tree anymore. The intermediate node in the Quadtree will have ${2^d}$ descendants for d dimension. For example, d=2 will have four descendants, which each of the descendants is referred to as a rectangle region. These four descendants can be viewed as quadrants that represent four directions(NW, NE, SW, SE) prospectively. The recursive subdivision will be continued on the rest of the data. Consequently, the Quadtree will not be balanced since that more densely the region is deeper the tree will grow. 
+
+Searching and inserting in the Quadtree is similar to other tree structures. New data points will start from the root node, the node will decide one subtree from the four descendants. For point query, there always will be only one candidate subtree for further searching. For range queries, there might be one or more candidate subtrees. The process will continue recursively until finding the goal.
 
 
 \subsection{R-tree}
@@ -202,6 +201,19 @@ Lookup in the radix table takes following procedures: first to extract an $r$-bi
 
 The building performance of RadixSpline is significantly lower than the RMI. In lookup latency, RadixSpline performs similarly with RMI, which both are better than traditional indexes such as B-Tree. However, the lookup latency of learned indexes can be affected by the distribution of the dataset. The index size of RadixSpline is unstable for different dataset, the paper reports significantly high memory cost in one of the dataset. 
 
+\subsection{FITing-Tree}
+FITing-Tree \cite{galakatos2019fiting} is another learned index that uses a piecewise linear function for key index approximation. The idea of the FITing-Tree is to partition keys into fixed-sized segments within certain error bounds. The error is defined as associated with the maximum prediction error distance between the actual position and the predicted position. Two types of FITing-Tree have been proposed, which a clustered FITing-Tree manages sorted and indexed key in table pages, and a non-clustered FITing-Tree adds an “indirection layer” to store sorted pointers to the key. 
+
+Lookup and insert of the interior nodes in a clustered FITing-Tree are similar to B+tree, but once the operation reaches the leaf node, the FITing-Tree does some additional work. The FITing-Tree stores a segment's slope, starting key, and a pointer to a segment at leaf level. Linear interpolation calculates the approximate position from a given slope. 
+
+The major difference between a non-cluster and a cluster FITing-Tree is the additional “indirection layer”. This layer indexes an array of pointers to the values that have been sorted within each segment, while the actual data remains unsorted in the table pages. All operations in the non-cluster FITing-Tree are performed on the indirection layer. To look up a data item, it must find the index of the pointer to the query data item in the indirection layer first, then the pointer returns the actual position in the table pages.
+
+Besides point query, FITing-Tree also provides range queries. For a given start or end of a range in the tuple, the searching node performs a tree traverse to the leaf, where it stores the slope and starting key of the segment that can be used for index prediction. Since values in the clustered FITing-Tree are sorted, and the pointers are also sorted in the indirection layer in the non clustered FITing-Tree. The search can take place contiguous until reaching the end of the range. 
+
+
+Similar to other learned indexes, FITing-Tree requires local search at leaf nodes. The clustered method requires sorted data, while the non-clustered method doesn’t require data to be sorted at table pages but pointers in the indirection layer still need to be sorted. The reported result \cite{galakatos2019fiting} showed that a non-clustered FITing-Tree is smaller than a non-clustered B+ tree with fixed-size pages because of fewer leaf and interior nodes that it has. 
+
+
 
 \section{Learned Spatial Index}
 \subsection{Learned ZM index}
@@ -232,7 +244,9 @@ The result shows that the RSMI has a good performance on the point query, the nu
 \subsection{Flood}
 Flood \cite{Nathan:2019wc} claims to be the first learned multi-dimensional in-memory index, which is based on the point access method grid file. The Flood model first to preprocess offline to choose an optimal layout for indexing, then an online component to handle executing queries. 
 
-The model breaks down into three parts: Projection, Refinement and Scan. Similar to the traditional grid file, projection is the first step to match a query is to locate the cell containing the search point, which is to identify the range of position in storage. Compared to z-address, columns contain points that are along x and then sorted by their y-values, creating the serialization order. When query overflows the sort dimension, Flood can take advantage of the ordering of points within each cell to further refine the physical index ranges. The final step is to scan and find the matched query filter. The model time complexity depends on the weight for each step $w_s$, $w_r$ and $w_s$ and size of cells and scanning points. 
+The model breaks down into three parts: Projection, Refinement and Scan. Similar to the traditional grid file, projection first to match a query is to locate the cell containing the search point, which is to identify the range of position in storage. Compared to z-address, points in the columns that are along x and then sorted by their y-values, creating the serialization order. Then, refinement can narrow down the range of search. When query overflows the sort dimension, Flood can take advantage of the ordering of points within each cell to further refine the physical index ranges. The final step is to scan and find the matched query filter. The model time complexity depends on the weight for each step $w_s$, $w_r$ and $w_s$ and size of cells and scanning points. 
+
+Flood also uses a piecewise linear model(PLM) to train the CDF. By using PLM, the partition boundary between each column is not equally spaced. A flattened layout, as referred in the paper, is introduced to correlate with unevenly distributed data. They also mentioned that modelling based on a single-dimensional attribute was sufficient to reach an equal number of points in each partition. 
 
 Compared to other traditional multidimensional data structures, Flood shows significant performance improvement on query time. In measuring varying query selectivity, Flood also works well and outperforms other traditional methods. 
 
@@ -242,7 +256,27 @@ A more recent study from the same authors of the Flood model proposed an improve
 
 The Grid Tree divides space into partitions based on the values of split dimension. Each partition contains a number of data points, which are stored in the internal node of the Gird Tree. An optimization is applied to the Grid Tree to minimize the query skew, by setting the split value that reduces the skew the most. 
 
-The Augmented Grid can correlate the points within each sub-region. Several different strategies can be applied to create the partitions. Notably, the strategy used in Flood is a $CDF$ on $X$ independently from other dimensions. It can use a conditional $CDF(X|Y)$ that X dependent on another dimension $Y$. It can also use a functional mapping to some dimension other than $X$. 
+The Augmented Grid can correlate the points within each sub-region. Several different strategies can be applied to create partitions. Notably, the strategy used in Flood is $CDF$ on $X$ independently from other dimensions. It can use a conditional $CDF(X|Y)$ that X dependent on another dimension $Y$. It can also use a functional mapping to some dimension other than $X$. They used adaptive gradient descent to optimize the augmented grid for the lowest average predicted query time and search space size. 
+
+The performance result shows that query time for Tsunami is 6$\times$ faster than Flood and 11$\times$ faster than the traditional index. The index size of the Tsunami is also much less than other indexes. The advantage of Tsunami is that it proposed strategies for data correlation to produce a more uniformly distributed data from a skewed dataset. There is still room for improvements, as mentioned in the paper, functional mapping can not handle outliers very well, the error bound can be enlarged; and the Augmented Grid can not handle higher dimensional data. 
+
+\subsection{qd-tree}
+Qd-tree is a high-dimensional data space partitioning binary tree, which is similar to the k-d tree. The qd-tree approaches the query task from a deep reinforcement learning-based framework. The structure of the qd-tree is built upon the binary tree. Each node in the tree contains data records that belong to the multidimensional data. The root node of the tree holds all the information for the entire dataset. 
+
+The strategy of querying entry in the tree is using a concept of routing data. Data is stored in the blocks on storage. Every record starts routing at the root of the tree, the same as most of the hierarchical structure, the record will recursively traverse down the tree. At each node, the tagged predicate $p$ is evaluated on the record. Each predicate in the node does range comparison ($\{<, \leq, >, \geq\}$) and equality comparison ($=$). A record at the node does a series of range comparisons to decide which leaf (left or right) to go.  Eventually, the record will be landed in the leaf node. The leaf node represents the physical location of the record on the disk. The block ID (\texttt{BID}) is stored along with the record on the leaf, indicating where the record belongs to. 
+
+The Greedy approach is beginning with a single root node that contains all the nodes. Then iterate through all the nodes to split the leaf node that is larger than $2b$ into two children nodes, the size of each of the children nodes is at least $b$. The Greedy approach has been reported to work well to reach the local optimal. The Deep RL method is a black box learning process without assumption on the data distribution or query. The Deep RL agent Woodblock is built on top of the Markov Decision Process (MDP). It defines the state space to be any subspace of entire data space, and action space to be the set of splits. The Woodblock agent contains two parameterized networks: 
+\begin{enumerate*}
+  \item policy network, which takes a state and emits a probability distribution over an action space.
+  \item value network, which estimates an expected cumulative reward for a given state.
+\end{enumerate*}
+
+
+
+The learning process trained through a series of episodes: 
+
+
+
 
 \section{Research Gaps}
 Researchers have different perspectives on constructing access methods for multidimensional data, from a traditional hierarchical structure to a learned index. 
@@ -260,6 +294,96 @@ Both Wang \cite{Wang:2019ks} and Nathan \cite{Nathan:2019wc} represent multidime
 The learned ZM index is trying to solve multidimensional problems in a one-dimensional way. The z-order curve or z-address is aiming to solve the consistency of simultaneously ordered spatial data on different dimensions. Interleaving bits of two-point value in a coordinate can convert the multidimensional data into one dimension. Applying the learned index model from Kafle \cite{Kafle:2017dy}, we could achieve a similar result as the learned B-Tree model. 
 
 The advantage\cite{Ding:2020we} of the Flood is that the query performance can be boosted by automatically adjusting the number of partitions in each dimension. The more partitions in the data space, the fewer points are needed to be scanned. A drawback of Flood is that it is not optimized for skewed data. For a query that is non-uniform, it will scan a large range of points until reaching the result. 
+
+
+\begin{adjustbox}{width={\textwidth}, totalheight={\textheight},keepaspectratio}%
+\footnotesize
+\newcommand*\rot[1]{\hss\rotatebox[origin=br]{-60}{#1}}
+\newcommand*\rotNarrow[1]{\hbox to2em{\hss\rotatebox[origin=br]{-60}{#1}}}
+\newcommand*\feature[1]{\ifcase#1 -\or\LEFTcircle\or\CIRCLE\fi}
+\newcommand*\f[6]{\feature#1&\feature#2&\feature#3&\feature#4&\feature#5&\feature#6}
+\newcommand*\ff[7]{\feature#1&\feature#2&\feature#3&\feature#4&\feature#5&\feature#6&\feature#7}
+\newcommand*\ex[4]{#1&\f#2&\f#3&\ff#4}
+
+\begin{threeparttable}
+\caption{Comparison of Data Indexes}
+\label{tab:features}
+
+\begin{tabular}{@{}l c@{}c@{}c@{}c@{}c@{}c@{} | c@{}c@{}c@{}c@{}c@{}c |  c@{}c@{}c@{}c@{}c@{}c@{}c}
+\toprule
+    Features
+    & \multicolumn{6}{c}{Traditional Spatial Indexes}
+    & \multicolumn{7}{c}{Learned Indexes} 
+    & \multicolumn{6}{c}{Learned Spatial Indexes}\\
+\midrule
+% rotated items
+ & \rot{Grid File}
+ & \rot{MOLHPE}
+ & \rot{K-D-Tree}
+ & \rot{BSP-tree}
+ & \rot{Quadtree}
+ & \rot{R-Tree}
+ %
+ & \rot{RMI}
+ & \rot{ALEX}
+ & \rot{PGM-index}
+ & \rot{RadixSpline}
+ & \rot{FITing-Tree}
+%  & \rotNarrow{PolyFit}
+ & \rot{qd-tree}
+ %
+ & \rot{ZM}
+ & \rot{RSMI}
+ & \rot{Flood}
+ & \rot{Tsunami}
+ & \rot{LISA}
+ & \rot{ML-Index}
+ & \rot{PolyFit}\\
+
+\midrule
+\ex{Top-down Construction} {222220}{220000}{2222000} \\
+\ex{Bottom-up Construction} {000002}{002220}{0000000} \\
+\ex{Single-pass Training} {222221}{002220}{0000000} \\
+\ex{Linear Structure} {020000}{000100}{0022000} \\
+\ex{Hierarchical Structure} {002222}{222020}{2200000} \\
+\ex{Grid Layout} {200000}{000000}{0022000} \\
+
+\midrule
+\ex{CDF approximation} {000000}{222222}{2222220} \\
+% \ex{Linear Model} {000000}{0000000}{000000} \\
+\ex{Piecewise Linear Model} {000000}{002020}{0020000} \\
+\ex{Recursive Model} {000000}{222020}{2200000} \\
+\ex{Require Sorted Data} {000000}{222210}{2100000} \\
+\ex{Require Local Search} {200000}{000020}{0000000} \\
+ 
+\midrule
+\ex{Transformation} {010000}{000000}{2200000} \\
+\ex{Overlapping Regions} {000002}{200000}{0200000} \\
+\ex{Clipping} {002000}{000000}{0000000} \\
+\ex{Multiple Layers} {100000}{000000}{0000000} \\
+
+\midrule
+\ex{Point Query} {222222}{222222}{2222222} \\
+\ex{Range Query} {222222}{000020}{2200200} \\
+\ex{Nearest Neighbour Query} {202222}{000000}{0200200} \\
+
+
+\bottomrule
+\end{tabular}
+
+\begin{tablenotes}
+\item \hfil$\feature2=\text{provides features}$; 
+$\feature1=\text{partially provides features}$;
+$\text{\feature0}=\text{does not provide features}$;
+% \item \hfil\textsuperscript{\dag}has academic publication;
+% \textsuperscript{*}end-user tool available
+\end{tablenotes}
+
+\end{threeparttable}
+
+% \end{table}
+\end{adjustbox}
+
 
 
 \section{Summary}
