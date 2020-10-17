@@ -27,7 +27,8 @@ For evaluation, the LSPH is implemented in C++ and has been tested on a machine 
 \end{adjustbox}
 \end{center}
 
-\textbf{Datasets}: As shown in the Table \ref{table:datasets} above, we have two real world datasets the \texttt{post} \cite{rtreeportal} and \texttt{osm} \cite{OpenStreetMap}, and one synthetic dataset the \texttt{g2} \cite{G2sets}.
+\subsection{Datasets} 
+As shown in the Table \ref{table:datasets} above, we have two real world datasets the \texttt{post} \cite{rtreeportal} and \texttt{osm} \cite{OpenStreetMap}, and one synthetic dataset the \texttt{g2} \cite{G2sets}.
 
 \begin{itemize}
   \item \texttt{post}: The \texttt{post} dataset contains 123,593 coordinates of post offices across North America. The distribution of this dataset is more evenly.
@@ -45,14 +46,18 @@ For evaluation, the LSPH is implemented in C++ and has been tested on a machine 
 
 Figure \ref{fig:datasets} illustrates the general size and distribution of each dataset. 
 
-\textbf{Competitors}:
+\subsection{Competitors}
 We are comparing LSPH with one traditional spatial index \textbf{R-Tree} \cite{Guttman:1984ka} and one learned spatial index \textbf{ZM} \cite{Wang:2019ks}
 
 \textbf{R-Tree}: A templated C++ version implemented by Greg Douglas \cite{rtreecplus} is used for comparison. The partitioning method in this version uses the Quadratic-Cost splitting algorithm from the original R-Tree paper \cite{Guttman:1984ka}. 
 
 \textbf{Learned ZM index}:  For the ZM model, the two-dimensional datasets convert to 64-bit one-dimensional data, using the Z-order curve transformation. We use an RMI implementation from the author of RadixSpline and SOSD \cite{Kipf:2020wr}. 
 
-In the experiment, we use sorted arrays to build all indexes. Each index takes two data values as a pair of keys for lookup query, and if it exists in the index, the returned results should match with the query keys. We execute the lookup query overall key pairs in all three datasets. Note that there are some duplicates in the dataset, and they have been filtered out before indexes building. Therefore, the input number of the query should match with the returned result if the index can locate the key without errors. 
+\subsection{Evaluation Metrics}
+We measure the performance of all indexes from four aspects: memory consumption during runtime, time cost of index building, time cost of query and accuracy of the query result. The runtime memory reflects the space complexity of the index method, and the measurement is using the Linux command \texttt{time -v} to get the maximum resident set size of allocated memory size during runtime. Time measurements in the experiment were using the C++ \texttt{std::chrono} library to record the time during index building and query execution in nanoseconds. 
+
+In the experiment, we use sorted arrays to build all indexes. Each index takes two data values as a pair of keys for lookup query, and if it exists in the index, the returned results should match with the query keys. We execute the lookup query overall key pairs in all three datasets. Note that there are some duplicates in the dataset, and they have been filtered out before indexes building. Therefore, the input number of the query should match with the returned results if the index can locate the key without errors. 
+
 
 
 \section{Performance Results}
@@ -63,11 +68,37 @@ In the experiment, we use sorted arrays to build all indexes. Each index takes t
     \\[\smallskipamount]
     \includegraphics[width=.5\textwidth]{Figures/query_time.pdf}\hfill
     \includegraphics[width=.5\textwidth]{Figures/avg_query_time.pdf}
-    \caption{Performance comparison on runtime memory, build time, total query time and average query time}\label{fig:performance}
+    \caption{Performance comparison on runtime memory, build time, total query time and average query time for all three spatial indexes}\label{fig:performance}
 \end{figure}
 
-\paragraph{Runtime Memory}
 
-\paragraph{Build Time}
+\begin{center}
+\begin{adjustbox}{max width={\textwidth}, max totalheight={\textheight},keepaspectratio}
+\begin{threeparttable}
+\caption{Point Query Accuracy}
 
-\paragraph{Query Time}
+\begin{tabular}{c|c c c}
+    \toprule
+                        % & \multicolumn{3}{c}{Dataset} \\\midrule \midrule
+        &\textbf{R-Tree}  & \textbf{ZM} & \textbf{LSPH}             \\ \midrule 
+    \texttt{post}    & 100 & 99.99  & 100 \\
+    \texttt{g2}      & 100  & 99.7 & 100     \\
+    \texttt{osm}     & 100 & 96.84  &  100\\
+     \bottomrule
+\end{tabular}
+% \begin{tablenotes}
+% \item[1] qwerty; \item[2] asdfgh
+% \end{tablenotes}
+\end{threeparttable}
+\label{table:accuracy}
+\end{adjustbox}
+\end{center}
+
+\subsection{Runtime Memory}
+Runtime Memory
+
+\subsection{Build Time}
+Build Time
+
+\subsection{Query Time}
+Query Time
