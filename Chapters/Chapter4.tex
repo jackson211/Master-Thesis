@@ -48,7 +48,7 @@ Figure \ref{fig:datasets} illustrates the general size and distribution of each 
 \textbf{Competitors}:
 We are comparing LSPH with one traditional spatial index \textbf{R-Tree} \cite{Guttman:1984ka} and one learned spatial index \textbf{ZM} \cite{Wang:2019ks}
 
-\textbf{R-Tree}: A templated C++ version implemented by Greg Douglas \cite{rtreecplus} is used for comparison. 
+\textbf{R-Tree}: A templated C++ version implemented by Greg Douglas \cite{rtreecplus} is used for comparison. The partitioning method in this version uses the Quadratic-Cost splitting algorithm from the original R-Tree paper \cite{Guttman:1984ka}. 
 
 \textbf{Learned ZM index}:  For the ZM model, the two-dimensional datasets convert to Z-order curve connected data. 
 
