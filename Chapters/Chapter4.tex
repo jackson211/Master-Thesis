@@ -3,7 +3,7 @@ In this section, I will discuss how I evaluate the LSH with some real world data
 
 \section{Experimental Setup}
 
-For evaluation, the LSH is implemented in C++ and has been tested on a machine with 2.2GHz 6-core Intel Core i7 CPU and 16GB memory. 
+For evaluation, the LSPH is implemented in C++ and has been tested on a machine with 2.2GHz 6-core Intel Core i7 CPU and 16GB memory. 
 
 \begin{center}
 \begin{adjustbox}{max width={\textwidth}, max totalheight={\textheight},keepaspectratio}
@@ -50,8 +50,9 @@ We are comparing LSPH with one traditional spatial index \textbf{R-Tree} \cite{G
 
 \textbf{R-Tree}: A templated C++ version implemented by Greg Douglas \cite{rtreecplus} is used for comparison. The partitioning method in this version uses the Quadratic-Cost splitting algorithm from the original R-Tree paper \cite{Guttman:1984ka}. 
 
-\textbf{Learned ZM index}:  For the ZM model, the two-dimensional datasets convert to Z-order curve connected data. 
+\textbf{Learned ZM index}:  For the ZM model, the two-dimensional datasets convert to 64-bit one-dimensional data, using the Z-order curve transformation. We use an RMI implementation from the author of RadixSpline and SOSD \cite{Kipf:2020wr}. 
 
+In the experiment, we use sorted arrays to build all indexes. Each index takes two data values as a pair of keys for lookup query, and if it exists in the index, the returned results should match with the query keys. We execute the lookup query overall key pairs in all three datasets. Note that there are some duplicates in the dataset, and they have been filtered out before indexes building. Therefore, the input number of the query should match with the returned result if the index can locate the key without errors. 
 
 
 \section{Performance Results}
