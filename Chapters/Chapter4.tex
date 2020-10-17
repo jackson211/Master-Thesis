@@ -28,7 +28,7 @@ For evaluation, the LSPH is implemented in C++ and has been tested on a machine 
 \end{center}
 
 \subsection{Datasets} 
-As shown in the Table \ref{table:datasets} above, we have two real world datasets the \texttt{post} \cite{rtreeportal} and \texttt{osm} \cite{OpenStreetMap}, and one synthetic dataset the \texttt{g2} \cite{G2sets}.
+As shown in the Table \ref{table:datasets} above, we have two real world datasets the \texttt{post} \cite{rtreeportal} and \texttt{osm} \cite{OpenStreetMap}, and one synthetic dataset the \texttt{g2} \cite{G2sets}. Figure \ref{fig:datasets} illustrates the general size and distribution of each dataset. 
 
 \begin{itemize}
   \item \texttt{post}: The \texttt{post} dataset contains 123,593 coordinates of post offices across North America. The distribution of this dataset is more evenly.
@@ -44,7 +44,6 @@ As shown in the Table \ref{table:datasets} above, we have two real world dataset
     \caption{Distribution of \texttt{post}, \texttt{g2} and \texttt{osm} datasets }\label{fig:datasets}
 \end{figure}
 
-Figure \ref{fig:datasets} illustrates the general size and distribution of each dataset. 
 
 \subsection{Competitors}
 We are comparing LSPH with one traditional spatial index \textbf{R-Tree} \cite{Guttman:1984ka} and one learned spatial index \textbf{ZM} \cite{Wang:2019ks}
@@ -68,7 +67,7 @@ In the experiment, we use sorted arrays to build all indexes. Each index takes t
     \\[\smallskipamount]
     \includegraphics[width=.5\textwidth]{Figures/query_time.pdf}\hfill
     \includegraphics[width=.5\textwidth]{Figures/avg_query_time.pdf}
-    \caption{Performance comparison on runtime memory, build time, total query time and average query time for all three spatial indexes}\label{fig:performance}
+    \caption{Point query performance comparison on runtime memory, build time, total query time and average query time for all three spatial indexes}\label{fig:performance}
 \end{figure}
 
 
@@ -81,9 +80,9 @@ In the experiment, we use sorted arrays to build all indexes. Each index takes t
     \toprule
                         % & \multicolumn{3}{c}{Dataset} \\\midrule \midrule
         &\textbf{R-Tree}  & \textbf{ZM} & \textbf{LSPH}             \\ \midrule 
-    \texttt{post}    & 100 & 99.99  & 100 \\
-    \texttt{g2}      & 100  & 99.7 & 100     \\
-    \texttt{osm}     & 100 & 96.84  &  100\\
+    \texttt{post}    & 100\% & 99.99\% & 100\% \\
+    \texttt{g2}      & 100\% & 99.71\% & 100\%  \\
+    \texttt{osm}     & 100\% & 96.84\% & 100\% \\
      \bottomrule
 \end{tabular}
 % \begin{tablenotes}
@@ -94,11 +93,13 @@ In the experiment, we use sorted arrays to build all indexes. Each index takes t
 \end{adjustbox}
 \end{center}
 
-\subsection{Runtime Memory}
-Runtime Memory
 
-\subsection{Build Time}
-Build Time
+Figure \ref{fig:performance} illustrates the overall performance of all indexes. 
 
-\subsection{Query Time}
-Query Time
+\textbf{Runtime Memory}
+
+\textbf{Build Time}
+
+\textbf{Query Time}
+
+\textbf{Accuracy}
