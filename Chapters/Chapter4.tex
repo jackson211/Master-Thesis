@@ -28,7 +28,7 @@ For evaluation, the LSPH is implemented in C++ and has been tested on a machine 
 \end{center}
 
 \subsection{Datasets} 
-As shown in the Table \ref{table:datasets} above, we have two real world datasets the \texttt{post} \cite{rtreeportal} and \texttt{osm} \cite{OpenStreetMap}, and one synthetic dataset the \texttt{g2} \cite{G2sets}. Figure \ref{fig:datasets} illustrates the general size and distribution of each dataset. 
+As shown in the Table \ref{table:datasets} above, we have two real world datasets the \texttt{post} \cite{rtreeportal} and \texttt{osm} \cite{OpenStreetMap}, and one synthetic dataset the \texttt{g2} \cite{G2sets}. 
 
 \begin{itemize}
   \item \texttt{post}: The \texttt{post} dataset contains 123,593 coordinates of post offices across North America. The distribution of this dataset is more evenly.
@@ -43,6 +43,9 @@ As shown in the Table \ref{table:datasets} above, we have two real world dataset
     \includegraphics[width=.33\textwidth]{Figures/aus-ocean_p.pdf}
     \caption{Distribution of \texttt{post}, \texttt{g2} and \texttt{osm} datasets }\label{fig:datasets}
 \end{figure}
+
+Figure \ref{fig:datasets} illustrates the general size and distribution of each dataset. The three datasets represent three different data distribution settings: the post dataset has relatively uniform data distribution, and with over 100,000 data points making it common scenarios for spatial data indexing; the g2 is a synthetic two-dimensional dataset contains two clusters of data points, which is skewed on the both of axis, to test the skewness handling among the indexes; the osm is another real-world dataset with a sizable amount of data, and combine the heavily skewed data distribution, to test the performance under skewed high volume real-world scenario.  
+
 
 
 \subsection{Competitors}
@@ -93,6 +96,11 @@ In the experiment, we use sorted arrays to build all indexes. Each index takes t
 \end{adjustbox}
 \end{center}
 
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{Figures/range_result.pdf}\hfill
+    \caption{Range Query performance on dataset \texttt{post}. The window size is corresponding to the query selectivity, which is between 0.0-100.0\%. The -1 in ZM represents the return results are out of search range.}\label{fig:range_result}
+\end{figure}
 
 Figure \ref{fig:performance} illustrates the overall performance of all indexes. 
 
