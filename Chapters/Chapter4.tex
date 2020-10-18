@@ -53,7 +53,7 @@ We are comparing LSPH with one traditional spatial index \textbf{R-Tree} \cite{G
 
 \textbf{R-Tree}: A templated C++ version implemented by Greg Douglas \cite{rtreecplus} is used for comparison. The partitioning method in this version uses the Quadratic-Cost splitting algorithm from the original R-Tree paper \cite{Guttman:1984ka}. 
 
-\textbf{Learned ZM index}:  For the ZM model, the two-dimensional datasets convert to 64-bit one-dimensional data, using the Z-order curve transformation. We use an RMI implementation from the author of RadixSpline and SOSD \cite{Kipf:2020wr}. 
+\textbf{Learned ZM index}:  For the ZM model, the two-dimensional datasets convert to 64-bit one-dimensional data, using the Z-order curve transformation. We use an RMI implementation from the author of RadixSpline and SOSD \cite{Kipf:2020wr, sosd}. 
 
 \subsection{Evaluation Metrics}
 We measure the performance of all indexes from four aspects: memory consumption during runtime, time cost of index building, time cost of query and accuracy of the query result. The runtime memory reflects the space complexity of the index method, and the measurement is using the Linux command \texttt{time -v} to get the maximum resident set size of allocated memory size during runtime. Time measurements in the experiment were using the C++ \texttt{std::chrono} library to record the time during index building and query execution in nanoseconds. 
@@ -74,11 +74,24 @@ In the experiment, we use sorted arrays to build all indexes. Each index takes t
 \end{figure}
 
 
+\subsection{Point Query Performance}
+
+
+\textbf{Overall performance}: We first compare the point query performance of all of the indexes on three datasets. Figure \ref{fig:performance} illustrates the overall performance of all indexes. The local search in the last step search in ZM used binary search, the total query time record the search range produced by a linear model plus the binary search execution time.  R-Tree uses minimum bounding boxes to store all spatial objects. Therefore, for point query in R-Tree, we set the minimum point and maximum point of a bounding box as the same pair of data values. 
+
+
+\textbf{Runtime Memory}
+
+\textbf{Build Time}
+
+\textbf{Query Time}
+
+\textbf{Accuracy}
+
 \begin{center}
 \begin{adjustbox}{max width={\textwidth}, max totalheight={\textheight},keepaspectratio}
 \begin{threeparttable}
 \caption{Point Query Accuracy}
-
 \begin{tabular}{c|c c c}
     \toprule
                         % & \multicolumn{3}{c}{Dataset} \\\midrule \midrule
@@ -97,17 +110,9 @@ In the experiment, we use sorted arrays to build all indexes. Each index takes t
 \end{center}
 
 
+
+\subsection{Point Query Performance}
 \begin{figure}
     \includegraphics[width=\textwidth]{Figures/range_result.pdf}\hfill
     \caption{Range Query performance on dataset \texttt{post}. The window size is corresponding to the query selectivity, which is between 0.0-100.0\%. The -1 in ZM represents the return results are out of search range.}\label{fig:range_result}
 \end{figure}
-
-Figure \ref{fig:performance} illustrates the overall performance of all indexes. 
-
-\textbf{Runtime Memory}
-
-\textbf{Build Time}
-
-\textbf{Query Time}
-
-\textbf{Accuracy}
