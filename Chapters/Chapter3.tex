@@ -57,6 +57,13 @@ The LSPH is similar to a regular hashmap. It is simple but yet powerful. Some ma
 \subsection{Single Dimensional Index Building}
 
 
+\begin{figure}[ht]
+\centering
+\includegraphics{Figures/single_dimension.pdf}
+\caption{Difference between building data with x-values and y-values}
+\label{fig:single_dimension}
+\end{figure}
+
 In the LSPH, the building process and the initial search range relies on one dimension of data. It is much easier to handle one-dimensional data than multidimensional data. The selection of the dimension for training is determined by the variance. Values on which dimension with a larger variance will be selected for model training. Given a series of two dimensional data $S = (x_i,\, y_i)$, compare the variance between $Var(x) \, \forall \, x \subseteq S$ and $Var(y) \, \forall \, y \subseteq S$, and dimension $p$ selected by the greater value between these two variances.
 
 
