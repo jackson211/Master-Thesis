@@ -85,7 +85,7 @@ The learned hashmap has been mentioned in Kraska’s paper \cite{Kafle:2017dy}. 
 
 \textbf{Small hash collision rate}: According to Kraska, the learned hashmap can reduce hash conflict by up to 77\%. The logic behind it is that a randomized hash function is a trend to generate a random hash value, whereas the learned CDF can produce a hash value that grows with an increase of the input value. Therefore, it is less likely to have hash collisions with learned hash functions.
 
-\textbf{Monotonicity of head nodes}: Since the prediction results monotonically grow with the input value, the order of head nodes in the learned hashmap is sorted. In a set of sorted data, for any values $x\prime$ that are greater than a given input value $x$, the predicted value from the learned CDF function $y\prime = \text{CDF}(x\prime)$ is also greater than the predicted value $y = \text{CDF}(x)$. Kristo \cite{Kristo:2020it} implemented a sorting algorithm based on this property of the learned hashmap. 
+\textbf{Sorted head nodes}: Since the prediction results monotonically grow with the input value, the order of head nodes in the learned hashmap is sorted. In a set of sorted data, for any values $x\prime$ that are greater than a given input value $x$, the predicted value from the learned CDF function $y\prime = \text{CDF}(x\prime)$ is also greater than the predicted value $y = \text{CDF}(x)$. Kristo \cite{Kristo:2020it} implemented a sorting algorithm based on this property of the learned hashmap. 
 
 
 \textbf{Load factor depends on model and data distribution}: The trained CDF maps all values from the dataset to the index value in the hashmap. Therefore, a good model choice and also the distribution of the data can affect the load factor. Whereas, the load factor in a hashmap that uses a random hash function is predetermined. This is critical to both memory space efficiency and query time performance. A high load factor can reduce the length of chaining to utilize the existing memory space in the hashmap, and also reduce the lookup overhead in the chaining. 
@@ -120,7 +120,7 @@ The basic operations including insert, delete and update in the LSPH are also al
 
 \textbf{Update}: To update an item, we need to determine whether the hash value of the data item is within the hashmap size of $m$. If the hash value is within the range, then we can insert the item as usual. If it is out of the range, the hashmap needs to be updated. The hash function model will be recalculated, and all existing items will be rehashed from the updated model. Since the linear model is used and the insertion process is relatively fast compared to neural network training, the rehash process is not considered expensive. 
 
-\section{Query Algorithms}
+\section{Spatial Query Algorithms}
 The structure of LSPH adopted from the learned hashmap. What makes it able to manage spatial data is spatial query algorithms. Three types of spatial queries that are currently supported by LSPH: \textit{Point Query}, \textit{Range Query}, and \textit{k Nearest Neighbour query}. These three queries are focused on point object handling, but also developed a bounding box query algorithm that supports more complex spatial objects other than point objects.  
 
 The most important and frequently executed operation is lookup a key. Key lookup in LSPH requires a hashing and iterative searching in the separate chaining. The performance of the lookup query is bounded by the length of chaining since the cost of hashing and indexing is always $O(1)$. The total cost of searching in the LSPH is $O(1 + \frac{n}{k})$, , where $\frac{n}{k}$ is the load factor. 
@@ -257,6 +257,14 @@ The \textit{k Nearest Neighbours Query} finds $k$ number of point neighbours tha
 The time complexity of Algorithm \ref{knn_query} is $O(1 + m\frac{n}{k})$, where $m$ is the size of expansion. Unlike hieratical structures such as B-Tree, the linear structure allows reducing redundant data scans caused by overlapping regions. Hence, LSPH can achieve more efficient kNN searching by fast hash computation and scanning regions reduction. 
 
 \section{Complex Spatial Object Handling}
+
+\begin{figure}[ht]
+\centering
+\includegraphics{Figures/object.pdf}
+\caption{Store the top-right and bottom-right corners of a MBB in the hashmap}
+\label{fig:object}
+\end{figure}
+
 The current process discussed above is all based on the point object in spatial data. We also implemented a method that allows the spatial index to handle more complex spatial objects such as line segments and polygons. All two-dimensional objects can be bounded by their minimum bounding box (MBB), which is a rectangle shape box defined by the minimum and maximum width and height of the object. The representation of MBB simplifies the structure of spatial objects. The $x$ and $y$ coordinate of two diagonal corner pointers are taken to store MBB in the LSPH.  
 
 The fundamental operation of MBB supported by the LSPH is for a given query point $q$, the search result returns the MBB that the $q$ belongs to. To check if a point is within a particular MBB, both of the corner points need to be compared with the query point. Therefore, we have to insert both of the corner points of the same MBB into the LSPH. Each data item contains the $x$ and $y$ coordinate of the corresponding corner, and a pointer to extra information of the data item that contains coordinates from both corners. 
