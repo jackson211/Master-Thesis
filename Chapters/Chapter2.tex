@@ -290,6 +290,15 @@ LISA also adopted a piecewise linear function as the shard prediction function. 
 
 Compared to traditional such as R-Tree, KD-Tree, the advantage of LISA is that it benefits from the learned monotonic function. The learned monotonic function allows the mapping order of keys to be sorted, keys that to be appended to the structure are naturally sorted. Hence key lookup in neighbouring value and update handling in LISA is easy. Even though it still has overlapping regions in the local models, LISA still does less data updating than R-Tree. 
 
+\subsection{ML-Index}
+The ML-Index \cite{Davitkova:2020dx} is another learned index for multidimensional data, and it supports point query, range query and KNN query. The ML-Index consists of two main components, the first part of the structure is to convert and scale the two-dimensional data into one dimension, and the second part is to use an RMI model as mentioned above by Kraska to learn the CDF of the data distribution. 
+
+The upper part of the algorithm is to scale a group of points that are similar to each other, and project into one-dimension. The first scaling method is to map distances of all points to a single reference point and use the distances as keys. It works for small datasets, but it is hard to scale to larger datasets. The second scaling method is called iDistance by Jagadish et al. \cite{}, $key = i \times c + dist(O_i, d_l)$, where $i$ is the index of the closest reference point $O_i$, and a constant $c$ partitions the points into predefined ranges and stretches the range according to its value. The third method calculates the offset value as the scaling value $key = \text{offset}_i + dist(O_i, d_L)$, where the offset is calculated by sum of the radii of every partition that is based on their arbitrary reference points.  
+
+The second part of the index is to build a recursive learned index as described in Kraska's paper. Instead of building multiple stages models in the original paper, the ML-Index uses only two stages to reduce expected error by increasing the number of models in the second stage. 
+
+The point query procedure is the same as RMI, which uses scaled values to predict bounds containing the expected query result from $[pos - err, pos + err]$. The range query iterates through the reference points and calculates the closest and furthest point for each reference point from the query range. Then issue the model prediction to find keys that are within the range. For the KNN query, the algorithm first predicts the position of the query key to locating the starting point of the search. 
+
 
 \section{Research Gaps}
 Researchers have different perspectives on constructing access methods for multidimensional data, from a traditional hierarchical structure to a learned index. 
@@ -357,32 +366,32 @@ The advantage\cite{Ding:2020we} of the Flood is that the query performance can b
  & \rot{PolyFit}\\
 
 \midrule
-\ex{Top-down Construction} {222220}{22000}{22220200} \\
+\ex{Top-down Construction} {222220}{22000}{22220220} \\
 \ex{Bottom-up Construction} {000002}{00222}{00002000} \\
-\ex{Single-pass Training} {222221}{00222}{00000000} \\
+\ex{Single-pass Training} {222221}{00020}{00000000} \\
 \ex{Linear Structure} {020000}{00010}{00000000} \\
-\ex{Hierarchical Structure} {002222}{22202}{22002000} \\
+\ex{Hierarchical Structure} {002222}{22202}{22002020} \\
 \ex{Grid Layout} {200000}{00000}{00220200} \\
 
 \midrule
 \ex{CDF approximation} {000000}{22222}{22222220} \\
 \ex{Piecewise Linear Model} {000000}{00202}{00200200} \\
-\ex{Recursive Model} {000000}{22202}{22000000} \\
+\ex{Recursive Model} {000000}{22202}{22000020} \\
 \ex{Reinforcement Learning} {000000}{00000}{00002000} \\
-\ex{Require Sorted Data} {000000}{22221}{21002200} \\
-\ex{Require Local Search} {200000}{10002}{22222200} \\
+\ex{Require Sorted Data} {000000}{22221}{21002220} \\
+\ex{Require Local Search} {200000}{10002}{22222220} \\
  
 \midrule
 \ex{Transformation} {010000}{00000}{22000000} \\
-\ex{Overlapping Regions} {000002}{20000}{02000000} \\
+\ex{Overlapping Regions} {000002}{22200}{02000020} \\
 \ex{Clipping} {002000}{00000}{00000000} \\
 \ex{Multiple Layers} {100000}{00000}{00000000} \\
 \ex{Space Partitioning} {100000}{00000}{00220200} \\
 
 \midrule
 \ex{Point Query} {222222}{22222}{22222222} \\
-\ex{Range Query} {222222}{00002}{22001200} \\
-\ex{Nearest Neighbour Query} {202222}{00000}{02000200} \\
+\ex{Range Query} {222222}{00002}{22001220} \\
+\ex{Nearest Neighbour Query} {202222}{00000}{02000220} \\
 
 \bottomrule
 \end{tabular}
