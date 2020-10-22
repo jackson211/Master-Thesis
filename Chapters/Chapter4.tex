@@ -74,19 +74,23 @@ In the experiment, we use sorted arrays to build all indexes. Each index takes t
 \end{figure}
 
 
-\subsection{Point Query Performance}
+
+\textbf{Overall performance}: We first compare the point query performance of all indexes on three datasets. Figure \ref{fig:performance} illustrates the overall performance of all indexes. The local search in the last step search in ZM used binary search, the total query time record the search range produced by a linear model plus the binary search execution time.  R-Tree uses minimum  bounding boxes to store all spatial objects. Therefore, for the point query in R-Tree, we set the minimum point and maximum point of a bounding box as the same pair of data values. As we see from the result, the LSPH has several advantages in memory and lookup query performance under certain conditions. 
 
 
-\textbf{Overall performance}: We first compare the point query performance of all of the indexes on three datasets. Figure \ref{fig:performance} illustrates the overall performance of all indexes. The local search in the last step search in ZM used binary search, the total query time record the search range produced by a linear model plus the binary search execution time.  R-Tree uses minimum bounding boxes to store all spatial objects. Therefore, for point query in R-Tree, we set the minimum point and maximum point of a bounding box as the same pair of data values. 
+\textbf{Runtime Memory}:
+Comparing our method with R-Tree and ZM in terms of runtime memory consumption, as shown in the top-left diagram in Figure \ref{fig:performance}. LSPH consumes a similar amount of memory as R-Tree for all three sets of data. ZM costs more memory than LSPH and R-Tree in the post and g2 dataset but costs less in the osm dataset. The ZM implementation requires running a rust code and converting it into C++ code, so it might consume more during conversion. The increase of numbers in the dataset causes a consistent growth in LSPH and R-Tree. For ZM, the memory cost is maintained at a certain level without concerning too much on the dataset size. 
 
 
-\textbf{Runtime Memory}
+\textbf{Build Time}: The build time of LSPH on a uniformly distributed dataset is outperforming the other two indexes. However, it cost more on skewed dataset g2 and osm. Since we are using a linear model for the ZM, the build time is much faster than as if we were training a neural network. The reason for the slower build time of LSPH on the skewed dataset is that skewed data creates more chaining in the hashmap, which increases the node access during insertion. 
 
-\textbf{Build Time}
 
-\textbf{Query Time}
+
+\textbf{Query Time}: Lookup query time showed a lookup performance advantage of LSPH. Note the log time scale in the total query time on the bottom of Figure \ref{}, we also add an average query time for comparison. LSPH performed the best out of three indexes in the post and osm, and second place in the g2. The lookup speed in LSPH performs best in uniformly distributed datasets, it even can reach exact O(1) if in a perfectly distributed dataset. The skewed data creates linked list overflow that causes some performance drop, but the average lookup speed is still kept at a slower growth compared to the ZM.  Although the lookup speed is much slower on an extreme cluster case that values on both axes are skewed, the LSPH still does a better job than ZM in terms of accuracy, which will be discussed in the next section.   
+
 
 \textbf{Accuracy}
+
 
 \begin{center}
 \begin{adjustbox}{max width={\textwidth}, max totalheight={\textheight},keepaspectratio}
@@ -111,7 +115,7 @@ In the experiment, we use sorted arrays to build all indexes. Each index takes t
 
 
 
-\subsection{Point Query Performance}
+\subsection{Range Query Performance}
 \begin{figure}
     \includegraphics[width=\textwidth]{Figures/range_result.pdf}\hfill
     \caption{Range Query performance on dataset \texttt{post}. The window size is corresponding to the query selectivity, which is between 0.0-100.0\%. The -1 in ZM represents the return results are out of search range.}\label{fig:range_result}
