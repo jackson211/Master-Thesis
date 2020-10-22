@@ -86,13 +86,13 @@ Comparing our method with R-Tree and ZM in terms of runtime memory consumption, 
 
 
 
-\textbf{Query Time}: Lookup query time showed a lookup performance advantage of LSPH. Note the log time scale in the total query time on the bottom of Figure \ref{}, we also add an average query time for comparison. LSPH performed the best out of three indexes in the post and osm, and second place in the g2. The lookup speed in LSPH performs best in uniformly distributed datasets, it even can reach exact O(1) if in a perfectly distributed dataset. The skewed data creates linked list overflow that causes some performance drop, but the average lookup speed is still kept at a slower growth compared to the ZM.  Although the lookup speed is much slower on an extreme cluster case where values on both axes are skewed, the LSPH still does a better job than ZM in terms of accuracy, which will be discussed in the next section.
+\textbf{Query Time}: Lookup query time showed a lookup performance advantage of LSPH. Note the log time scale in the total query time on the bottom of Figure \ref{fig:performance}, we also add an average query time for comparison. LSPH performed the best out of three indexes in the post and osm, and second place in the g2. The lookup speed in LSPH performs best in uniformly distributed datasets, it even can reach exact $O(1)$ if in a perfectly distributed dataset. The skewed data creates linked list overflow that causes some performance drop, but the average lookup speed is still kept at a slower growth compared to the ZM.  Although the lookup speed is much slower on an extreme cluster case where values on both axes are skewed, the LSPH still does a better job than ZM in terms of accuracy, which will be discussed in the next section.
 
 
 \begin{center}
 \begin{adjustbox}{max width={\textwidth}, max totalheight={\textheight},keepaspectratio}
 \begin{threeparttable}
-\caption{Point Query Accuracy} \label{table:accuracy}
+\caption{Point Query Accuracy}
 \begin{tabular}{c|c c c}
     \toprule
                         % & \multicolumn{3}{c}{Dataset} \\\midrule \midrule
