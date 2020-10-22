@@ -227,6 +227,8 @@
       \vfill
       {\large A thesis submitted in partial fulfillment for the \par}
       {\large degree of Master of Science(Computer Science) \par}
+      {\large 75 credit points Master Research Project \par}
+      {\large Subject code: COMP90070 \par}
       \bigskip
       \bigskip
       {\large in the \par}
