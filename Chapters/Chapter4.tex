@@ -110,7 +110,7 @@ Comparing our method with R-Tree and ZM in terms of runtime memory consumption, 
 \end{adjustbox}
 \end{center}
 
-\textbf{Accuracy}: Table \ref{table:accuracy} shows the accuracy of point query results from three indexes. R-Tree and LSPH can find every single query point from all three datasets. Some query points are not matching the query points in the ZM, due to the prediction positions are bounded by errors. If the errors have large ranges, for example, in the skewed datasets g2 and osm, some predictions will exceed the maximum error ranges.
+\textbf{Accuracy}: Table \ref{table:accuracy} shows the accuracy of point query results from three indexes. R-Tree and LSPH can find every single query point from all three datasets. Some query points are not matching the query points in the ZM, due to the prediction positions are bounded by errors. If the errors have large ranges, for example, in the skewed datasets \texttt{g2} and \texttt{osm}, some predictions will exceed the maximum error ranges.
 
 
 \subsection{Range Query Performance}
@@ -119,3 +119,7 @@ Comparing our method with R-Tree and ZM in terms of runtime memory consumption, 
     \includegraphics[width=\textwidth]{Figures/range_result.pdf}\hfill
     \caption{Range Query performance on dataset \texttt{post}. The window size is corresponding to the query selectivity, which is between 0.0-100.0\%. The -1 in ZM represents the return results are out of search range.}\label{fig:range_result}
 \end{figure}
+
+LSPH outperformed the other two indexes in point query speed. However, the range query can be considered as a weakness of the LSPH. The result is shown in Figure \ref{fig:range_result}. The range query performance was tested on the \texttt{post} dataset, since the \texttt{post} is more uniformly distributed that helps various window sizes can retrieve good amounts of data. The position of the range query window is located at the centre of the dataset, the selectivity of window size grows from 0 - 100 \%.  
+
+The performance of range queries of LSPH is worse than the R-Tree and the ZM. R-Tree is a hierarchical structure that its nodes contain the containment relationship between the minimum bounding box and spatial object. Therefore, it performed better at range query tasks. 
