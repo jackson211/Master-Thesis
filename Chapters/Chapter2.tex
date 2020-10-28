@@ -300,6 +300,15 @@ The second part of the index is to build a recursive learned index as described 
 The point query procedure is the same as RMI, which uses scaled values to predict bounds containing the expected query result from $[pos - err, pos + err]$. The range query iterates through the reference points and calculates the closest and furthest point for each reference point from the query range. Then issue the model prediction to find keys that are within the range. For the KNN query, the algorithm first predicts the position of the query key to locating the starting point of the search. 
 
 
+\subsection{PolyFit}
+PolyFit \cite{li2020polyfit} uses piecewise polynomial functions to process approximate range aggregate queries. Aggregate functions including COUNT, SUM, MIN and MAX. The key cumulative functions are extracted from those aggregate functions. Then the measured key cumulative function is used to construct the index. 
+
+The PolyFit index is built upon polynomial fitting for an interval of data. The polynomial function can achieve a better approximation of data distribution when compared to linear regression or piecewise linear regression. It is hard to fit the whole dataset with one polynomial function. Therefore, it also utilizes multiple polynomial functions to reduce the fitting error, which could get the approximate function more accurately. Memory consumption is also worth considering, one way is to use dynamic programming to minimize the number of polynomial functions while fitting the dataset well. Authors proposed Greedy Segmentation method (GS), it inserts one more key into the interval incrementally, then checks whether the interval can fulfill the bounded error constraint. 
+
+The PolyFit can be extended for two-dimensional queries. Similar to the one dimensional range aggregate queries, it estimates the key cumulative function with two keys for COUNT query. Then follow the same idea from GS to utilize the number of polynomial functions. However, the GS method takes $O(n^2)$ to obtain the minimum number of segmentations. They use a Quad-tree based method to get the segmentations. If a segmentation does not fulfill the error guarantee, the space partition can be continuously broken into four smaller partitions. 
+
+
+
 \section{Research Gaps}
 Researchers have different perspectives on constructing access methods for multidimensional data, from a traditional hierarchical structure to a learned index. 
 
@@ -366,31 +375,31 @@ The advantage\cite{Ding:2020we} of the Flood is that the query performance can b
  & \rot{PolyFit}\\
 
 \midrule
-\ex{Top-down Construction} {222220}{22000}{22220220} \\
+\ex{Top-down Construction} {222220}{22000}{22220222} \\
 \ex{Bottom-up Construction} {000002}{00222}{00002000} \\
 \ex{Single-pass Training} {222221}{00020}{00000000} \\
 \ex{Linear Structure} {020000}{00010}{00000000} \\
-\ex{Hierarchical Structure} {002222}{22202}{22002020} \\
-\ex{Grid Layout} {200000}{00000}{00220200} \\
+\ex{Hierarchical Structure} {002222}{22202}{22002022} \\
+\ex{Grid Layout} {200000}{00000}{00220201} \\
 
 \midrule
-\ex{CDF approximation} {000000}{22222}{22222220} \\
+\ex{CDF approximation} {000000}{22222}{22222222} \\
 \ex{Piecewise Linear Model} {000000}{00202}{00200200} \\
-\ex{Recursive Model} {000000}{22202}{22000020} \\
+\ex{Recursive Model} {000000}{22202}{22000022} \\
 \ex{Reinforcement Learning} {000000}{00000}{00002000} \\
-\ex{Require Sorted Data} {000000}{22221}{21002220} \\
-\ex{Require Local Search} {200000}{10002}{22222220} \\
+\ex{Require Sorted Data} {000000}{22221}{21002222} \\
+\ex{Require Local Search} {200000}{10002}{22222222} \\
  
 \midrule
 \ex{Transformation} {010000}{00000}{22000000} \\
 \ex{Overlapping Regions} {000002}{22200}{02000020} \\
 \ex{Clipping} {002000}{00000}{00000000} \\
 \ex{Multiple Layers} {100000}{00000}{00000000} \\
-\ex{Space Partitioning} {100000}{00000}{00220200} \\
+\ex{Space Partitioning} {100000}{00000}{00220202} \\
 
 \midrule
 \ex{Point Query} {222222}{22222}{22222222} \\
-\ex{Range Query} {222222}{00002}{22001220} \\
+\ex{Range Query} {222222}{20002}{22001222} \\
 \ex{Nearest Neighbour Query} {202222}{00000}{02000220} \\
 
 \bottomrule
