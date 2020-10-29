@@ -165,7 +165,7 @@
 \newcommand*{\keywords}[1]{\def\keywordnames{#1}}
 \supervisor  {}
 \examiner    {}
-\degree      {Master of Science(Computer Science)}
+\degree      {Master of Science (Computer Science)}
 \authors     {}
 \university  {\texorpdfstring{\href{University Web Site URL Here (include http://)}
                 {The University of Melbourne}}
@@ -226,9 +226,9 @@
       {\LARGE \authornames \par}
       \vfill
       {\large A thesis submitted in partial fulfillment for the \par}
-      {\large degree of Master of Science(Computer Science) \par}
-      {\large 75 credit points Master Research Project \par}
-      {\large Subject code: COMP90070 \par}
+      {\large degree of Master of Science (Computer Science) \par}
+      {\large 75-point Master Research Project \par}
+      {\large Subject Code: COMP90070 \par}
       \bigskip
       \bigskip
       {\large in the \par}
@@ -272,7 +272,7 @@
     {\normalsize \deptname \par}
     {\normalsize \schoolname \par}
     \bigskip
-    {\normalsize Master of Science(Computer Science)\par}
+    {\normalsize Master of Science (Computer Science)\par}
     \bigskip
     {\normalsize\bf \@title \par}
     \medskip

@@ -127,3 +127,10 @@ The performance of range queries of LSPH is worse than the R-Tree and the ZM. R-
 The overall performance of the ZM index is fast. However, in the last two window sizes 80\% and 100\%, the ZM can not retrieve points from the corresponding range, due to the predicted position being out of the maximum position. Hence, the ZM can not guarantee the accuracy of the search result. 
 
 Our approach LSPH for the range query takes the longest time among the three. The range query algorithm in LSPH requires iterative search between a minimum hash value and a maximum hash value. However, it has to check every single point in the hashmap chaining. This means that the search is not only the head nodes in the hashmap but also every data item that is stored in the linked list. Therefore, it creates a lot of computational overhead. 
+
+
+
+\section{Summary}
+
+
+\chapter{Conclusions and Future Work}

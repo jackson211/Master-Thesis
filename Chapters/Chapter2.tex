@@ -12,7 +12,7 @@ Overall, designing an efficient, functional and dynamic spatial index requires c
 
 
 
-\section{Spatial Queries Definitions}
+\section{Spatial Queries}
 We are assuming all the spatial queries are performing in two-dimensional spatial plane space. 
 
 \begin{query}\label{def:pmq}
@@ -38,7 +38,7 @@ The Nearest-Neighbor Query is to find $k$ neighbour objects that are closest to 
 
 
 
-\section{Techniques in Spatial index}
+\section{Spatial Indexing Techniques}
 Many spatial indexes are developed based on one-dimensional methods. However, to fulfill requirements of query handling in spatial indexes, additional techniques such as transformation, overlapping regions, clipping and multiple layers are introduced in \cite{Faloutsos:1991ue}. 
 
 
@@ -75,7 +75,7 @@ Multiple layers \cite{Gaede:1998fp} are similar to overlapping regions, since re
 
 
 
-\section{Traditional Spatial Data Index}
+\section{Traditional Spatial Data Indexes}
 
 Characteristics of multidimensional data is complex  \cite{Gaede:1998fp, Robinson:1981id}. Gaede and Robinson have summarized some requirements for spatial indexes: dynamic, secondary storage management, a broad range of supported operations, independence of input data, simplicity, scalability, time efficiency, space efficiency, concurrency and recovery, minimum impact. The following sections introduce some of the popular traditional spatial indexing methods,  illustrate a wide range of techniques, as mentioned above, addressing the requirements for spatial index. 
 
@@ -142,7 +142,7 @@ For the deletion of a node in the tree, the search query must be performed. If f
 
 To reduce the overlaps in insertion, the author proposes several different splitting algorithms in the original paper. A quadratic-cost algorithm picks two of the M+1 entries as the first elements of the two new groups. The criterion of choosing the pair is that they would take most areas if both were put in the same group, which means the region of a rectangle covering the two entries, minus the region of entries themselves, would be the largest. A linear-cost algorithm is similar to the quadratic-cost algorithm but uses different criteria to select the two entries. The two entries were selected based on the dimension of entries. For entries whose highest low side and lowest high side, record such separation. The separation will be normalized by the width of the entire set along the corresponding dimension. Then choose the pair with the greatest normalized separation along any dimension. 
 
-\section{The Learned Index for One-dimensional data}
+\section{Learned Indexes for One-dimensional data}
 \subsection{The Recursive Model Index}
  Kraska \cite{Kraska:2017vh}  proposed a method that uses a machine learning model to replace indexes. Kraska introduced the idea that data indexes can be treated as models, we can describe the data distribution by constructing the cumulative continuous functions. A B-Tree indexes a key into a hierarchical structure, retrieving the position of that key from traversing the tree. It stores as many as children as possible to diminish the height of the tree, hence to reduce the number of disk access. The B-Tree is a self-balance tree, it only provides an approximate position with min and max error with stored keys. The optimal searching time complexity requires log time retrieval. To insert and delete a key, B-Tree needs to re-balance to provide the same search time guarantee. More importantly, strong error bounds are not needed since prediction results can be replaced by local precise search algorithms. Identical patterns obtained in a continuous function that used to describe a distribution of data can be used to build a data structure for indexing. As a result, range searching in the B-Tree index can be replaced by machine learning models such as linear regression, which can predict an approximate point to the next stage and error from the prediction does not affect the final search accuracy. 
 
@@ -215,7 +215,7 @@ Similar to other learned indexes, FITing-Tree requires local search at leaf node
 
 
 
-\section{Learned Spatial Index}
+\section{Learned Spatial Indexes}
 \subsection{Learned ZM index}
 Inspired by the Learned Index, Wang \cite{Wang:2019ks} integrate the idea of using models to replace indexes and spatial technique to create an index model for spatial queries. One of the difficulties of the multidimensional access method contrasts with one-dimensional is to preserve the sequential order of spatial indexes. Learned spatial index can adopt a similar idea from one dimensional learned index models. The concept of the Z-order curve can help to convert multidimensional data into 1D space vectors. By interleaving two bit strings x and y from a coordinate point (x, y), we can generate a unique number for this point on 1D vector space, which is referred to as Z-address. The multi-staged recursive model is similar to the Learned B-Tree model, using the predicted value as a pointer to access to models at the next stage. This can guarantee the lower bound of the error from the model prediction will not propagate to the next model. 
 

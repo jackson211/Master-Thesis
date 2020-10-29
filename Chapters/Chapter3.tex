@@ -1,5 +1,5 @@
 
-\chapter{Proposed Method}
+\chapter{Proposed Indexing Model}
 
 Before we integrate machine learning models on conventional spatial data indexes, we should review the current state-of-art learned indexes and spatial indexes. The most important idea that comes from the learned indexes is to use learned models to predict the possible location of the key. In RMI, a query point is passed into a sequence of learned models to get the final range of location. ALEX improved on RMI using a \textit{Gapped Array} or a \textit{Packed Array} to store data points, instead of searching in a single array. The RMI is more memory efficient compared to ALEX since all the data points are allocated in a contiguous array, whereas ALEX allocates data points at a different location in memory. The PGM-index uses piecewise linear models to create segments of linear models. The number of segments controls the trade-off between time and space. 
 
@@ -27,8 +27,9 @@ Firstly, retrieving the query point is the most important function in the spatia
 Overall, we are focusing on two aspects when designing a spatial index: query result accuracy, complete functionality of spatial query and performance improvement. The following sections describe how a \textit{Learned Hashmap} can be useful in a spatial index and achieve these goals. 
 
 
-\section{The Learned Spatial Hashmap Overview}
+\section{The Learned Hashmap}
 
+\subsection{Overview}
 \begin{figure}[ht]
 \centering{
 \includegraphics{Figures/hashmap.pdf}
@@ -77,7 +78,7 @@ Training on only a single dimension might also avoid potential data skewness. In
  The selection of $p$ dimension can affect the space utility in the LSPH. A load factor in a hashmap is defined as: $\textit{Load Factor} = \frac{\textit{n}}{\textit{k}} $, where $n$ is \textit{number of entries occupied in the hashmap} and $k$ is \textit{size of hashmap}. Performance of the hashmap is largely decided by the load factor \cite{hashmap}. For example, a hashmap with a load factor of $0.5$ represents only half of the slots in the hashmap that are loaded with values. The hashmap in the LSPH is created with a size of prediction range, so in general, a high load factor can reduce chaining overhead and increase space utilization. 
 
 
-\section{The Learned Hashmap} \label{the_learned_hashmap}
+\subsection{Learning a Hashmap} \label{the_learned_hashmap}
 
 
 The learned hashmap has been mentioned in Kraska’s paper \cite{Kafle:2017dy}. He suggested that the learned hash map is no better than traditional hashmaps such as Cuckoo hashing in terms of solving conflict and distributing key mapping. There are some properties of the learned hashmap not mentioned in Kraska's paper, which can be strengths for handling spatial query operations. 
@@ -97,11 +98,11 @@ The learned hashmap has been mentioned in Kraska’s paper \cite{Kafle:2017dy}. 
 
 Overall, these properties provide a foundation for the LSPH. The structure of the hashmap, monotonicity of head node and small collision rate are crucial for query accuracy, query performance and implementing spatial query algorithms. Compared to other learned indexes, the accuracy of a point query relies on the structure of the hashmap, rather than model prediction. Hence, the LSPH can guarantee the search result accuracy. 
 
-\subsection{Model}
+\subsection{Model for Learning}
 The query performance is largely dependent on the model and the distribution of data. Because the prediction value is used as a hash value instead of the actual position of the key in the hashmap, the model does not need to be well fitted with the dataset. Neural networks are better for fitting data well, but it also takes a long time for training, and more expensive at inference. A linear model can do a good job, because the computation is much simpler. With a trained weight $w$ and bias $b$, linear function $y = wx \dot b$ can map an approximate distribution of data, and it can achieve a good performance at inference. Therefore, linear regression is chosen as the learned model for the LSPH, and the least square method is used for training the two parameters. As a result, the building process of LSPH is also fast. 
 
 
-\section{Basic Operations}
+\section{Update Handling}
 The basic operations including insert, delete and update in the LSPH are also almost identical to a regular hashmap. Rather than changing the way a hashmap is used, we changed the data item content and made it suitable for handling spatial objects. Points in spatial space usually contain the coordinates of its location, which is ${x, y}$. As mentioned above, a dimension $p$ is chosen for model training, and it is also used for all operations of the LSPH. 
 
 
@@ -120,7 +121,7 @@ The basic operations including insert, delete and update in the LSPH are also al
 
 \textbf{Update}: To update an item, we need to determine whether the hash value of the data item is within the hashmap size of $m$. If the hash value is within the range, then we can insert the item as usual. If it is out of the range, the hashmap needs to be updated. The hash function model will be recalculated, and all existing items will be rehashed from the updated model. Since the linear model is used and the insertion process is relatively fast compared to neural network training, the rehash process is not considered expensive. 
 
-\section{Spatial Query Algorithms}
+\section{Query Processing}
 The structure of LSPH adopted from the learned hashmap. What makes it able to manage spatial data is spatial query algorithms. Three types of spatial queries that are currently supported by LSPH: \textit{Point Query}, \textit{Range Query}, and \textit{k Nearest Neighbour query}. These three queries are focused on point object handling, but also developed a bounding box query algorithm that supports more complex spatial objects other than point objects.  
 
 The most important and frequently executed operation is lookup a key. Key lookup in LSPH requires a hashing and iterative searching in the separate chaining. The performance of the lookup query is bounded by the length of chaining since the cost of hashing and indexing is always $O(1)$. The total cost of searching in the LSPH is $O(1 + \frac{n}{k})$, , where $\frac{n}{k}$ is the load factor. 
@@ -285,3 +286,5 @@ To retrieve the MBB from the query point, the procedure is similar to the k Near
 The performance of MBB searching is also similar to the performance of kNN query, except that MBB does not require a $k$ number of return values. Since we insert both the lower-left corner and upper-right corner into the hashmap, the searching pointer can compare to either corner arbitrarily. A pointer stores coordinate values of both corners are pointing to the hashmap item, so no matter which corner that the current searching pointer is comparing with, it can access the full information of both corners. 
 
 There is one issue that can occur when two MBBs are overlapping, but the polygons themself do not overlap, the result will only return the first found MBB. To find the finer search result over polygon spatial objects, the information of the shape of the polygon is needed to calculate if the search point is within the polygon. 
+
+\section{Summary}
