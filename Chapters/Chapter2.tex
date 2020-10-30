@@ -90,6 +90,14 @@ Characteristics of multidimensional data is complex  \cite{Gaede:1998fp, Robinso
 
 
 \subsection{Grid File}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.75]{Figures/grid_file.pdf}
+\caption{Grid File}
+\label{fig:grid_file}
+\end{figure}
+
 The grid file \cite{NievergeltJ:1984kc} is a hashing-based spatial access method, which is a grid layout partition to store data objects. A grid file consists of a rectangular d-dimensional cell, each grid cell has a number of shapes and sizes. A bucket contains one cell and many its neighbouring cells, and each cell is bound to one bucket. The main structure of the grid file consists of $d$ one-dimensional arrays called scales that are kept in the main memory. 
 
 
@@ -110,6 +118,14 @@ It performed well over uniformly distributed data, outperformed many other spati
 
 
 \subsection{K-D-Tree}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.75]{Figures/kdtree.pdf}
+\caption{K-D-Tree}
+\label{fig:kdtree}
+\end{figure}
+
 K-D-Tree \cite{Bentley:1975gn} is a popular multidimensional data scheme that uses a hierarchical structure. It is a binary search tree, and each node represents a point in ${K}$ dimensional space. The universe of ${K}$ dimensional space is splitting by ${K-1}$ dimensional hyperplanes recursively. Each data point is used as the coordinate of splitting hyperplanes, which depends on whether the node is X-align or Y-align. The X-align or Y-align decides which axis to compare for newly inserted data points. The intermediate nodes have one or two descendants for search. The searching procedure is straightforward, comparing the corresponding axis value from the tree level, then going to the right or left subtree, repeating the process until the goal data point is found. 
 
 One of the problems with the K-D-Tree is that the order of inserting points can have a large effect on the shape of the tree. Also, data points are distributed scattered over the tree, which will be difficult to execute complex queries such as the nearest neighbours query. Keeping the tree balanced can also be hard since the structure of the tree is mostly decided by the order of insertion. 
@@ -118,6 +134,14 @@ The adaptive K-D-Tree \cite{Bentley:1975gn} improves on the splitting by choosin
 
 
 \subsection{BSP-Tree}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.75]{Figures/bsptree.pdf}
+\caption{BSP-Tree}
+\label{fig:bsptree}
+\end{figure}
+
 Comparable to K-D-Tree, the BSP-tree \cite{Fuchs:1980bj} is also a binary tree with a recursive subdivision subspace by splitting hyperplanes. Instead of vertical or horizontal lines in the K-D-Tree, the BSP-tree uses the arbitrary orientation of splitting hyperplanes. It allows the subdivided space to be more flexible and well suited for arbitrary shapes of spatial objects. Since data points are not used as the splitting hyperplane, each subspace can be divided independently. The partition hyperplane can be selected depending on the distribution of data objects. 
 Inserting a point to the tree is also similar to the K-D-Tree. Starting from the root node, the search point has to compare with the value in the root node and determine whether to go to the right or left part of the tree. All data objects are stored in the leaf node, so the search will stop until reaching the leaf node of the tree. 
 The BSP-Tree can handle non-uniformed distributed data well. However, arbitrary splitting hyperplanes also require more complex calculations and storage space. 
@@ -125,12 +149,28 @@ The BSP-Tree can handle non-uniformed distributed data well. However, arbitrary 
 
 
 \subsection{Quadtree}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.75]{Figures/quadtree.pdf}
+\caption{Quadtree}
+\label{fig:bsptree}
+\end{figure}
+
 The Quadtree \cite{CSUR:tm} is also considered to be closed to the K-D-Tree. The difference is the Quadtree is not a binary tree anymore. The intermediate node in the Quadtree will have ${2^d}$ descendants for d dimension. For example, d=2 will have four descendants, which each of the descendants is referred to as a rectangle region. These four descendants can be viewed as quadrants that represent four directions(NW, NE, SW, SE) prospectively. The recursive subdivision will be continued on the rest of the data. Consequently, the Quadtree will not be balanced since that more densely the region is deeper the tree will grow. 
 
 Searching and inserting in the Quadtree is similar to other tree structures. New data points will start from the root node, the node will decide one subtree from the four descendants. For point query, there always will be only one candidate subtree for further searching. For range queries, there might be one or more candidate subtrees. The process will continue recursively until finding the goal.
 
 
-\subsection{R-tree}
+\subsection{R-Tree}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.75]{Figures/rtree.pdf}
+\caption{R-Tree}
+\label{fig:rtree}
+\end{figure}
+
 R-Tree\cite{Guttman:1984ka} is a height-balanced hierarchical data structure that applies overlapping technique. Only the leaf nodes store the minimum bounding box (MBB) of data objects. For the interior nodes, each node has to store two information: children of the node and a MBB that contains all the nodes. The R-Tree contains the following properties: 
 
 \begin{itemize}
