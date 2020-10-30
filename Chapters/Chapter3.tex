@@ -27,7 +27,7 @@ Firstly, retrieving the query point is the most important function in the spatia
 Overall, we are focusing on two aspects when designing a spatial index: query result accuracy, complete functionality of spatial query and performance improvement. The following sections describe how a \textit{Learned Hashmap} can be useful in a spatial index and achieve these goals. 
 
 
-\section{The Learned Hashmap}
+\section{The Learned Spatial Hashmap}
 
 \subsection{Overview}
 \begin{figure}[ht]
@@ -98,7 +98,7 @@ The learned hashmap has been mentioned in Kraska’s paper \cite{Kafle:2017dy}. 
 
 Overall, these properties provide a foundation for the LSPH. The structure of the hashmap, monotonicity of head node and small collision rate are crucial for query accuracy, query performance and implementing spatial query algorithms. Compared to other learned indexes, the accuracy of a point query relies on the structure of the hashmap, rather than model prediction. Hence, the LSPH can guarantee the search result accuracy. 
 
-\subsection{Model for Learning}
+\subsection{Model Choice}
 The query performance is largely dependent on the model and the distribution of data. Because the prediction value is used as a hash value instead of the actual position of the key in the hashmap, the model does not need to be well fitted with the dataset. Neural networks are better for fitting data well, but it also takes a long time for training, and more expensive at inference. A linear model can do a good job, because the computation is much simpler. With a trained weight $w$ and bias $b$, linear function $y = wx \dot b$ can map an approximate distribution of data, and it can achieve a good performance at inference. Therefore, linear regression is chosen as the learned model for the LSPH, and the least square method is used for training the two parameters. As a result, the building process of LSPH is also fast. 
 
 
@@ -257,7 +257,7 @@ The \textit{k Nearest Neighbours Query} finds $k$ number of point neighbours tha
 
 The time complexity of Algorithm \ref{knn_query} is $O(1 + m\frac{n}{k})$, where $m$ is the size of expansion. Unlike hieratical structures such as B-Tree, the linear structure allows reducing redundant data scans caused by overlapping regions. Hence, LSPH can achieve more efficient kNN searching by fast hash computation and scanning regions reduction. 
 
-\section{Bounding Box Handling}
+\section{Minimum Bounding Box Handling}
 
 \begin{figure}[ht]
 \centering

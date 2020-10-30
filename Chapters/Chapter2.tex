@@ -48,6 +48,13 @@ The transformation technique constitutes spatial objects (polygons, line segment
 \subsubsection{Space-filling Curves}
 Space-filling curves can be used to represent a list of grid cells or, equivalently, a list of one-dimensional intervals that define the position of the grid cells concerned can be used to represent extended objects. It is especially useful for organizing multidimensional spatial data on one dimensional data access methods. How to order points on a grid layout and fill curves in between points is critical for an efficient data lookup. Popular space-filling techniques include the Z-ordering curve \cite{Orenstein:1984jq} and Hilbert curve \cite{Kamel:1994ux}. Both of them tend to arrange data as close to each other as possible, as well as in terms of memory space.
 
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.5]{Figures/space_curve.pdf}
+\caption{Z-ordering Curve and Hilbert Curve}
+\label{fig:space_curve}
+\end{figure}
+
 \paragraph{Z-ordering Curve}
 Z-ordering \cite{Orenstein:1984jq} is a space filling curve dynamically hashing points that are close to each other, which is based on the Peano curve. The process of obtaining a z-ordering curve on a space starting from splitting into two equal sized subspace by ${(d-1)}$-dimensional hyperplane. This process can be executed recursively until it meets the following criterias \cite{Gaede:1998fp}. 
 
