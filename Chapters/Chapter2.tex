@@ -154,7 +154,7 @@ The BSP-Tree can handle non-uniformed distributed data well. However, arbitrary 
 \centering
 \includegraphics[scale=0.75]{Figures/quadtree.pdf}
 \caption{Quadtree}
-\label{fig:bsptree}
+\label{fig:quadtree}
 \end{figure}
 
 The Quadtree \cite{CSUR:tm} is also considered to be closed to the K-D-Tree. The difference is the Quadtree is not a binary tree anymore. The intermediate node in the Quadtree will have ${2^d}$ descendants for d dimension. For example, d=2 will have four descendants, which each of the descendants is referred to as a rectangle region. These four descendants can be viewed as quadrants that represent four directions(NW, NE, SW, SE) prospectively. The recursive subdivision will be continued on the rest of the data. Consequently, the Quadtree will not be balanced since that more densely the region is deeper the tree will grow. 
