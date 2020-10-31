@@ -20,11 +20,19 @@ There are two primary aims of this proposed research:
 \item To apply the learned model technique based on existing knowledge about data indexes. 
 \end{itemize}
 
-The success achieved in the one-dimensional data index raises a question if we are reasoning about a similar task on multidimensional data: how can we improve the efficiency of a spatial data index through learned models? Specifically, can we improve the performance of the index by reducing the query lookup speed; or reducing the memory consumption; and comparison with some existing approaches to the learned spatial index, can we do better or worse than those methods? 
-
+The success achieved in the one-dimensional data index raises a question if we are reasoning about a similar task on multidimensional data: how can we improve the efficiency of a spatial data index through learned models? Specifically, can we improve the performance of the index by reducing the query lookup speed; or reducing the memory consumption; and compare to existing approaches to the learned spatial index, can we do better or worse than those methods? 
 
 
 \section{Approach and Outcomes}
+
+The objectives of this research are to investigate existing data indexes and propose a learned index method that supports spatial queries. The main contribution of the study consist of three parts:
+\begin{itemize}
+    \item We reviewed previous work on various data indexes, including traditional spatial indexes, one-dimensional learned indexes, and learned spatial indexes.
+    \item We proposed a new spatial index method: Learned Spatial Hashmap (LSPH). The LSPH is a spatial index that is built on top of a hashmap with a learned hash function.  
+    \item We validated the LSPH with real-world and synthetic datasets, and performance is competitive against other spatial indexes.
+\end{itemize}
+
+Previous studies on the learned spatial indexes have focused on combining traditional spatial index methods with the learned CDF. Almost every learned spatial index has claimed to have a faster search time and less memory size compared to the traditional methods. However, there are some disadvantages to those methods. First, most learned spatial indexes tended to focus on efficiency rather than accuracy, many of them predict the index position from a recursive model index, which the prediction result can not guarantee to locate the correct approximate position since the error can be very different from the maximum error bounds. Although the error can be reduced to an acceptable range, it still requires hyperparameter tuning for a single application.  Second, many of the existing methods lack support for spatial queries. The ZM index does not support KNN queries \cite{Wang:2019ks}. Flood and Tsunami process a range scan for query points, but they also do not support KNN query \cite{Nathan:2019wc, Ding:2020we}. Third, learned indexes that use a multilayer neural network can have an expensive build time. 
 
 
 \section{Thesis Structure}
