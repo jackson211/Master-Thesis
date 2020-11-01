@@ -83,6 +83,9 @@ Training on only a single dimension might also avoid potential data skewness. In
 
 The learned hashmap has been mentioned in Kraska’s paper \cite{Kafle:2017dy}. He suggested that the learned hash map is no better than traditional hashmaps such as Cuckoo hashing in terms of solving conflict and distributing key mapping. There are some properties of the learned hashmap not mentioned in Kraska's paper, which can be strengths for handling spatial query operations. 
 
+\textbf{Hashmap is a two-dimensional data structure}:
+The hashtable and linked list chaining are two-dimensional, which is naturally suitable for routing two-dimensional data in those two components with values that belong to different dimensions. 
+
 
 \textbf{Small hash collision rate}: According to Kraska, the learned hashmap can reduce hash conflict by up to 77\%. The logic behind it is that a randomized hash function is a trend to generate a random hash value, whereas the learned CDF can produce a hash value that grows with an increase of the input value. Therefore, it is less likely to have hash collisions with learned hash functions.
 

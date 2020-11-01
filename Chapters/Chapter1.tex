@@ -34,5 +34,13 @@ The objectives of this research are to investigate existing data indexes and pro
 
 Previous studies on the learned spatial indexes have focused on combining traditional spatial index methods with the learned CDF. Almost every learned spatial index has claimed to have a faster search time and less memory size compared to the traditional methods. However, there are some disadvantages to those methods. First, most learned spatial indexes tended to focus on efficiency rather than accuracy, many of them predict the index position from a recursive model index, which the prediction result can not guarantee to locate the correct approximate position since the error can be very different from the maximum error bounds. Although the error can be reduced to an acceptable range, it still requires hyperparameter tuning for a single application.  Second, many of the existing methods lack support for spatial queries. The ZM index does not support KNN queries \cite{Wang:2019ks}. Flood and Tsunami process a range scan for query points, but they also do not support KNN query \cite{Nathan:2019wc, Ding:2020we}. Third, learned indexes that use a multilayer neural network can have an expensive build time. 
 
+We proposed the Learned Spatial Hashmap (LSPH), which is a hashmap with a learned hash function for handling spatial queries. This method is straightforward, it uses values of one dimension from a two-dimensional data pair to train a monotonic CDF that describes the data distribution along one dimension in a set of spatial objects.  The learned CDF is functioning as the hash function for the hashmap, and the predicted value from the learned CDF used as the hash value. Since the hash value from the CDF is going to be the same regardless of prediction error, it guarantees to locate the same spot and obtain the search result according to the query. We are also introduced to the single-dimensional index building, which is to train the CDF model with values that are from one dimension. The benefits of building indexes with the dimension with a larger variance are 
+\begin{enumerate*}
+  \item Increasing the space utilization in the hashmap.
+  \item Query performance gain.
+  \item Solving skewness by choosing the dimension is less skewed.
+\end{enumerate*}
+There are three types of spatial query supported by the LSPH: point quey, range query and KNN query. In addition to handling spatial points, the LSPH is also supporting a minimum bounding box. Therefore, the LSPH is addressing some disadvantages of existing learned indexes and it has obtained interesting performance results compared to other methods.  
+
 
 \section{Thesis Structure}
