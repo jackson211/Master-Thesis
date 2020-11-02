@@ -40,7 +40,10 @@ We proposed the Learned Spatial Hashmap (LSPH), which is a hashmap with a learne
   \item Query performance gain.
   \item Solving skewness by choosing the dimension is less skewed.
 \end{enumerate*}
-There are three types of spatial query supported by the LSPH: point quey, range query and KNN query. In addition to handling spatial points, the LSPH is also supporting a minimum bounding box. Therefore, the LSPH is addressing some disadvantages of existing learned indexes and it has obtained interesting performance results compared to other methods.  
+There are three types of spatial query supported by the LSPH: point quey, range query and KNN query. In addition to handling spatial points, the LSPH is also supporting a minimum bounding box. Therefore, the LSPH manages spatial data efficiently and addresses some disadvantages of existing learned indexes. 
+
+It has obtained better or even performance results compared to other methods under certain conditions. Our method achieves up to $8\times$ query performance speedup over R-Tree and $40\times$ speedup over a ZM index on a real-world dataset while maintaining similar memory consumption with R-Tree.  
+
 
 
 \section{Thesis Structure}
