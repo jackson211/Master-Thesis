@@ -191,6 +191,14 @@ To reduce the overlaps in insertion, the author proposes several different split
 
 \section{Learned Indexes for One-dimensional data}
 \subsection{The Recursive Model Index}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=1]{Figures/rmi.pdf}
+\caption{RMI}
+\label{fig:rmi}
+\end{figure}
+
  Kraska \cite{Kraska:2017vh}  proposed a method that uses a machine learning model to replace indexes. Kraska introduced the idea that data indexes can be treated as models, we can describe the data distribution by constructing the cumulative continuous functions. A B-Tree indexes a key into a hierarchical structure, retrieving the position of that key from traversing the tree. It stores as many as children as possible to diminish the height of the tree, hence to reduce the number of disk access. The B-Tree is a self-balance tree, it only provides an approximate position with min and max error with stored keys. The optimal searching time complexity requires log time retrieval. To insert and delete a key, B-Tree needs to re-balance to provide the same search time guarantee. More importantly, strong error bounds are not needed since prediction results can be replaced by local precise search algorithms. Identical patterns obtained in a continuous function that used to describe a distribution of data can be used to build a data structure for indexing. As a result, range searching in the B-Tree index can be replaced by machine learning models such as linear regression, which can predict an approximate point to the next stage and error from the prediction does not affect the final search accuracy. 
 
 \[p = F(Key) * N\]
