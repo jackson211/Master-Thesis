@@ -1,8 +1,16 @@
 \chapter{Conclusions and Future Work}
+The primary objective of this study is to develop an understanding of learned spatial data indexes and propose a new approach of a spatial index with the learned model technique. Firstly, we have examined some previous works on the spatial data management techniques and spatial indexes based on that. We have also reviewed and compared some of the state-of-art learned one-dimensional indexes and learned spatial indexes. The conclusions obtained from the comparison suggest that a learned index model maps a data distribution that could potentially reduce the time complexity of query time, and as a benefit from directly locating the position of keys from models, the storage memory size of indexes is also lower than traditional data indexes. Notably, there are still some limitations in existing learning indexes. The RMI does not guarantee to find the query result 100\% accurately without hyperparameter tuning for a particular dataset. Lack of spatial query support in ZM and Flood also limit the functionalities of real-world application as a spatial data index. Neural network training in RMI, ZM and reinforcement learning in the qd-tree takes a long time to build, which can be a problem in real-world applications. 
+
+Secondly, we proposed a new index method for handling spatial data and queries, the Learned Spatial Hashmap (LSPH). It integrates ideas that come from data science and machine learning to combine a learned CDF with a traditional hashmap. As a result of the learned CDF, the two-dimensional point query performance in LSPH achieved up to $8\times$ speedup compared to R-Tree and  $40\times$ speedup compared to ZM index.  The runtime memory cost of LSPH is similar to the R-Tree, which is overall balanced between space and time complexity. More importantly, LSPH addresses some disadvantages from existing learned model indexes. LSPH supports range queries, KNN queries, and can handle minimum bounding boxes. It is also worthwhile mentioning that LSPH guarantees query results to be 100\% accurate. 
+
+
+\section{Implications}
+Our proposed spatial index method has a potential influence on studies in learned data indexes and real-world database applications. Folmer et al. \cite{Folmer:vg} proposed a Learning Spatial Buckets method for handling spatial data, which uses a similar idea of single dimension index building from our approach. However, there are not many studies that investigate the use of learned hashmap or other kinds of hashmap in the spatial index. Therefore, LSPH contributes a new idea to studies in spatial data management systems. 
+
+LSPH provides the same result retrieving accuracy as the traditional spatial indexes and supports various spatial queries. LSPH has also been examined to outperform certain traditional spatial data indexes in real-world datasets. It is worth considering applying LSPH to real-world database systems and related software. 
 
 
 \section{Limitations}
-
 
 \section{Future Work}
 
