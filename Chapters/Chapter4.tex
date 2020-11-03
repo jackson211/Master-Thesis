@@ -134,7 +134,7 @@ Our approach LSPH for the range query takes the longest time among the three. Th
 \begin{center}
 \begin{adjustbox}{max width={\textwidth}, max totalheight={\textheight},keepaspectratio}
 \begin{threeparttable}
-\caption{load factor's effect on the query performance}
+\caption{load factor's effect on the query performance in LSPH}
 \begin{tabular}{c|c c c}
     \toprule
                         % & \multicolumn{3}{c}{Dataset} \\\midrule \midrule
@@ -150,6 +150,10 @@ Our approach LSPH for the range query takes the longest time among the three. Th
 \label{table:loadfactor}
 \end{adjustbox}
 \end{center}
+
+The load factor in the LSPH is dependent on data distribution and modelling. Comparing the load factors from all three datasets and their average query time is shown in the Figure \ref{table:loadfactor}. Overall, our statistics are consistent with the theoretical hypothesis that higher load factor in the hashmap will expect a better query performance. The \texttt{post} dataset has the best average query time with the highest load factor. The load factor in the \texttt{g2} is much lower than the load factor in the \texttt{osm}, but the average query time in the \texttt{g2} is still higher than the \texttt{osm}. The inconsistency of the result is because of differences between quantity of datasets. The \texttt{osm} contains significantly more data points then the \texttt{g2}, which takes more time in linked list search for LSPH. The load factor in \texttt{g2} is $10\times$ smaller than the load factor in \texttt{post}, and the average query time is $3\times$ slower than \texttt{post}. The load factor in \texttt{osm} is $4\times$ smaller than the load factor in \texttt{post}, and the average query time is $7.75\times$ slower than \texttt{post}.
+
+Therefore, a higher load factor in the learned hashmap can achieve a better query performance. Besides the data distribution, models can also affect the load factor. Linear regression is great for mapping the approximate distribution of data and maintaining a very low computational cost. However, linear regression is not able to illustrate more complex curve shapes. It is worth considering piecewise monotonic regression in the future. 
 
 
 \section{Summary}
