@@ -129,6 +129,28 @@ The overall performance of the ZM index is fast. However, in the last two window
 Our approach LSPH for the range query takes the longest time among the three. The range query algorithm in LSPH requires iterative search between a minimum hash value and a maximum hash value. However, it has to check every single point in the hashmap chaining. This means that the search is not only the head nodes in the hashmap but also every data item that is stored in the linked list. Therefore, it creates a lot of computational overhead. 
 
 
+\subsection{Load Factor and Query Performance}
+
+\begin{center}
+\begin{adjustbox}{max width={\textwidth}, max totalheight={\textheight},keepaspectratio}
+\begin{threeparttable}
+\caption{load factor's effect on the query performance}
+\begin{tabular}{c|c c c}
+    \toprule
+                        % & \multicolumn{3}{c}{Dataset} \\\midrule \midrule
+                                    &\texttt{post}      & \texttt{g2} & \texttt{osm}             \\ \midrule 
+    \textbf{load factor}\tnote{1}            & 0.638\%   & 0.059\%   & 0.159\% \\
+    \textbf{average query time}     & 52ns      & 155ns     & 403ns   \\
+    \bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item[1] $\text{load factor} = \frac{n}{k}$, where n is the total number of entries, and k is the size of hashmap;
+\end{tablenotes}
+\end{threeparttable}
+\label{table:loadfactor}
+\end{adjustbox}
+\end{center}
+
 
 \section{Summary}
 
