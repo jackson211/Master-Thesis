@@ -7,12 +7,16 @@ Secondly, we proposed a new index method for handling spatial data and queries, 
 \section{Implications}
 Our proposed spatial index method has a potential influence on studies in learned data indexes and real-world database applications. Folmer et al. \cite{Folmer:vg} proposed a Learning Spatial Buckets method for handling spatial data, which uses a similar idea of single dimension index building from our approach. However, there are not many studies that investigate the use of learned hashmap or other kinds of hashmap in the spatial index. Therefore, LSPH contributes a new idea to studies in spatial data management systems. 
 
-LSPH provides the same result retrieving accuracy as the traditional spatial indexes and supports various spatial queries. LSPH has also been examined to outperform certain traditional spatial data indexes in real-world datasets. It is worth considering applying LSPH to real-world database systems and related software. 
+LSPH provides the same result retrieving accuracy as the traditional spatial indexes and supports various spatial queries. LSPH has also been examined to outperform one of the popular traditional spatial data indexes and one of the state-of-art learned spatial indexes in real-world datasets. It is worth considering applying LSPH to real-world database systems and related software. 
 
 
-\section{Limitations}
+\section{Limitations and Future Work}
+\textbf{Skewness handling}: Notably, we have obtained a poor performance result from LSPH on the \texttt{g2} dataset. The single-dimensional index building has limitations when handling data skewness on both axes. Therefore, we would like to investigate the methods that can improve performance on skewed data. 
 
-\section{Future Work}
+\textbf{Memory consumption}: LSHP might consume more memory in certain cases, because the size of the hashmap is determined by the minimum prediction value and the maximum prediction value, and even if there are very few data items between this prediction range, the hashmap will still allocate the same amount of slots. 
 
+\textbf{Range query and KNN query performance}: Different from most spatial indexes, LSPH is a two-dimensional linear structure, rather than a hierarchical structure. The faster range query performance of the hierarchical structure indexes results from the containment relationship between parent nodes and child nodes. Future work is going to focus on building relationships between entries and experimenting with different structures. 
+
+\textbf{Model Choice}: Linear regression works well as the learned CDF in the hashmap. However, a major limitation of linear regression is it can not fit data distribution very well. Even the hashmap does not require a perfectly fitted CDF, but a more fitted model will result in better performance in terms of memory utilization and lookup speed. 
 
 \section{Conclusion}
