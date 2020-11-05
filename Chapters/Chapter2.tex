@@ -214,6 +214,14 @@ Kraska also discussed some applications of the learned model on other data struc
 
 
 \subsection{ALEX}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=1]{Figures/alex.pdf}
+\caption{ALEX}
+\label{fig:alex}
+\end{figure}
+
 The ALEX \cite{Ding:2020wo} is an adaptive learned index improvement of the RMI. The major improvement is that ALEX uses different data structures to store data on the leaf nodes, whereas RMI uses only one single array. Gapped Array (GA) and Packed Memory Array (PMA) are the two node layouts that have been explored in the paper. Since all the data are stored in the leaf node, the search method in ALEX uses exponential search. The other feature is that ALEX adjusts the shape and height of the RMI dynamically depending on the updated workload. It also inserts records dynamically, which stores the key at where the model predicts. 
 
 
@@ -225,6 +233,14 @@ Adaptive RMI Initialization in ALEX sets a predetermined maximum bound for the n
 
 
 \subsection{The PGM-index}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=1]{Figures/pgm.pdf}
+\caption{PGM-index}
+\label{fig:pgm}
+\end{figure}
+
 The Piecewise Linear Approximation model \cite{Ferragina:ud} is a pure learned data structure, rather than a hybrid learned model such as RMI. The PGM-index builds upon a sequence of segments, each one indexing a sequence of keys in constant space and constant query time to return the approximate position of the key in the array. Another property of the PGM-index is it is a recursive algorithm that constructs the index structure to fit the distribution of the keys. 
 
 The PGM-index is to focus on optimizing space-time trade-off. It has the following advantages in space-time complexity:
@@ -246,6 +262,14 @@ The performance result shows that the PGM-index improves space occupancy by offe
 
 
 \subsection{RadixSpline}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{Figures/radixspline.pdf}
+\caption{RadixSpline}
+\label{fig:radixspline}
+\end{figure}
+
 RadixSpline \cite{Kipf:2020wr} is another learned index that builds upon a single pass over the data. RadixSpline is built in a bottom-up approach in two steps. First, a linear spline is to model the cumulative distribution functionc (CDF) of the data, which guarantees certain error bounds. Second, a radix table will be built as an approximation index into the spline points. 
 
 To build a RadixSpline, we first construct an error-bounded spline model $S$ on top of the underlying data. The spline model $S$ always predicts the correct location of the data within a constant error of $e$. The parameters of the model $S$ are a set of spline data points $Knots(S)$. For any look up key $k$, linearly interpolating between the two closest spline points in $Knots(S)$ will output an estimate within error $e$. 
