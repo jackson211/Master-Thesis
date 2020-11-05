@@ -175,6 +175,11 @@ The performance of the \textit{Point Query} is great for a uniformly distributed
 \end{figure}
 
 
+\textit{Range Query}, in addition to \textit{Point Query}, requires to specify the search range and scan through every data item if qualified. As illustrated in Figure \ref{fig:range_search}, first to find the $hashKeyMin$ and $hashKeyMax$ for the minimum and maximum x value, or minimum and maximum y value, depending on the $sort_by_x$. Then we can scan through every chain within the search region in the hashmap, to check if a data item from a node is in the searching range.
+
+
+One of the properties of the monotonic growing learned map is that the values in the head nodes are sorted. Therefore, the $hashKeyMin$ and $hashKeyMax$ is defining the bounds of the search region. Any index value on the hashmap that exceeds the $hashKeyMin$ and $hashKeyMax$ will be out of the target region. At each chaining bucket, it just needs to check if points are within the range and if true then append the point to the result list. The time complexity for the range query depends on the size of the search region and the length of chaining.  
+
 \begin{algorithm}[H] \label{range_query}
 \SetAlgoLined
 \KwIn{Range of search window $r$}
@@ -200,11 +205,6 @@ The performance of the \textit{Point Query} is great for a uniformly distributed
 \end{algorithm}
 
 
-\textit{Range Query}, in addition to \textit{Point Query}, requires to specify the search range and scan through every data item if qualified. As illustrated in Figure \ref{fig:range_search}, first to find the $hashKeyMin$ and $hashKeyMax$ for the minimum and maximum x value, or minimum and maximum y value, depending on the $sort_by_x$. Then we can scan through every chain within the search region in the hashmap, to check if a data item from a node is in the searching range.
-
-One of the properties of the monotonic growing learned map is that the values in the head nodes are sorted. Therefore, the $hashKeyMin$ and $hashKeyMax$ is defining the bounds of the search region. Any index value on the hashmap that exceeds the $hashKeyMin$ and $hashKeyMax$ will be out of the target region. At each chaining bucket, it just needs to check if points are within the range and if true then append the point to the result list. The time complexity for the range query depends on the size of the search region and the length of chaining.  
-
-
 
 \subsection{k Nearest Neighbours Query}
 
@@ -216,6 +216,9 @@ One of the properties of the monotonic growing learned map is that the values in
 \end{figure}
 
 
+
+
+The \textit{k Nearest Neighbours Query} finds $k$ number of point neighbours that have the closest distance to query point $q$. The algorithm starts with the same hashing process as in \textit{Point Query} and \textit{Range Query}. It first compares the distances with the current bucket of chaining, and stores the candidate into a priority queue that prioritizes based on the closest distance. Once it has been explored at the current index, it can expand the exploration to neighbour indexes. Since the indexes are sorted based on the monotonic growth of head nodes, the neighbour indexes are containing the closest nodes to the query node. Hence, the next step of the searching process will use two pointers, which one is doing an incremental search, and another one is doing a decremental search along the hashmap. The expansion search process will stop until the minimum of distances that collected at the current index is greater than or equal to the maximum distances collected previously.  Finally, k items pop out of the queue and return as the result of k nearest neighbours search
 
 \begin{algorithm}[H] \label{knn_query}
 \SetAlgoLined
@@ -256,9 +259,10 @@ localMinDist $\leftarrow{0}$\;
  \caption{k Nearest Neighbours Query}
 \end{algorithm}
 
-The \textit{k Nearest Neighbours Query} finds $k$ number of point neighbours that have the closest distance to query point $q$. The algorithm starts with the same hashing process as in \textit{Point Query} and \textit{Range Query}. It first compares the distances with the current bucket of chaining, and stores the candidate into a priority queue that prioritizes based on the closest distance. Once it has been explored at the current index, it can expand the exploration to neighbour indexes. Since the indexes are sorted based on the monotonic growth of head nodes, the neighbour indexes are containing the closest nodes to the query node. Hence, the next step of the searching process will use two pointers, which one is doing an incremental search, and another one is doing a decremental search along the hashmap. The expansion search process will stop until the minimum of distances that collected at the current index is greater than or equal to the maximum distances collected previously.  Finally, k items pop out of the queue and return as the result of k nearest neighbours search
 
 The time complexity of Algorithm \ref{knn_query} is $O(1 + m\frac{n}{k})$, where $m$ is the size of expansion. Unlike hieratical structures such as B-Tree, the linear structure allows reducing redundant data scans caused by overlapping regions. Hence, LSPH can achieve more efficient kNN searching by fast hash computation and scanning regions reduction. 
+
+
 
 \section{Minimum Bounding Box Handling}
 
