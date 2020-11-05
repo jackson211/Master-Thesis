@@ -379,6 +379,14 @@ A stopping condition is necessary for ending the episode training. As it is defi
 
 
 \subsection{LISA}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=1]{Figures/lisa.pdf}
+\caption{LISA}
+\label{fig:lisa}
+\end{figure}
+
 LISA proposed by Li \cite{Li:2020ki}, designated to generate data layout that allows using machine learning models to search in an arbitrary spatial dataset that is stored in the disk pages. Similar to many popular traditional approaches, LISA partitioning space into a series of grid cells, and numbering the cells along a sequence of axes. It builds a learned regression model $SP$ to map the keys distribution into different shards, and assign an id for each shard. All shards preserve order concerning the corresponding interval in the mapped data. Keys in shards are stored in several disk pages, which means that one shard might contain keys from different pages. At the final stage, local models are required for page address lookup for the given query. 
 
 LISA also adopted a piecewise linear function as the shard prediction function. The piecewise linear function is a monotonic regression model, and it allows the mapped values to be sorted. Therefore, the operations for searching members of different partitions at the bottom level is efficient. The range query in LISA access to the keys that belong to the search region. Similar to traditional spatial indexes that applied \textbf{overlapping regions} technique, since the space partition might divide keys from different disk pages, it has to scan the overlapped pages in local models. For a KNN query, the given point and the number of return values k, LISA will estimate the distance bound base on the query. Then, the keys remaining within the bound are selected to perform repetitive range queries, until we get K nearest keys. 
