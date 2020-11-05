@@ -305,6 +305,14 @@ The Learned ZM index is reported to save above 90\% memory compared to R-Tree si
 
 
 \subsection{Recursive spatial model index}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.7]{Figures/rsmi.pdf}
+\caption{RSMI}
+\label{fig:rsmi}
+\end{figure}
+
 The recursive spatial model index (RSMI) \cite{Qi:2020uz} is another spatial data index that incorporates the Z-order curve and the RMI. Data points in the spatial space are first mapped to a $n \times n$ grid to describe the rank space. Then a Z-order curve maps every point on the rank space with a curve value. All points are sorted in ascending order based on the curve value, then points can be packed into a block by $p.blk = [p.rank \cdot n/B]$, where B is the capacity of a block. Then, a regression model is trained to predict the $p.blk$ for given point coordinate. 
 
 For a larger scale data set, the RSMI partition all data points into a certain size of the grid. Each of the grid cells contains up to a certain number of data points. At the top level, the model is predicting a value that is not directly the exact matching result. Then, we can regroup points with the same block curve value. The partition will be repeated to follow in the same manner, the learned model in each partition predicts which sub-partition the point belongs to. Once the partition is completed, data points along with block id from preceding and subsequent blocks are stored in each block. The pointer of block id makes it easier for access and searching in blocks at a different level. 
@@ -321,6 +329,14 @@ The result shows that the RSMI has a good performance on the point query, the nu
 
 
 \subsection{Flood}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{Figures/flood.pdf}
+\caption{Flood}
+\label{fig:flood}
+\end{figure}
+
 Flood \cite{Nathan:2019wc} claims to be the first learned multi-dimensional in-memory index, which is based on the point access method grid file. The Flood model first to preprocess offline to choose an optimal layout for indexing, then an online component to handle executing queries. 
 
 The model breaks down into three parts: Projection, Refinement and Scan. Similar to the traditional grid file, projection first to match a query is to locate the cell containing the search point, which is to identify the range of position in storage. Compared to z-address, points in the columns that are along x and then sorted by their y-values, creating the serialization order. Then, refinement can narrow down the range of search. When query overflows the sort dimension, Flood can take advantage of the ordering of points within each cell to further refine the physical index ranges. The final step is to scan and find the matched query filter. The model time complexity depends on the weight for each step $w_s$, $w_r$ and $w_s$ and size of cells and scanning points. 
