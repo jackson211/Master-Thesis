@@ -116,7 +116,8 @@ Comparing our method with R-Tree and ZM in terms of runtime memory consumption, 
 \subsection{Range Query Performance}
 
 \begin{figure}
-    \includegraphics[width=\textwidth]{Figures/range_result.pdf}\hfill
+    \centering
+    \includegraphics[scale=0.7]{Figures/range_result.pdf}\hfill
     \caption{Range Query performance on dataset \texttt{post}. The window size is corresponding to the query selectivity, which is between 0.0-100.0\%. The -1 in ZM represents the return results are out of search range.}\label{fig:range_result}
 \end{figure}
 
@@ -127,6 +128,28 @@ The performance of range queries of LSPH is worse than the R-Tree and the ZM. R-
 The overall performance of the ZM index is fast. However, in the last two window sizes 80\% and 100\%, the ZM can not retrieve points from the corresponding range, due to the predicted position being out of the maximum position. Hence, the ZM can not guarantee the accuracy of the search result. 
 
 Our approach LSPH for the range query takes the longest time among the three. The range query algorithm in LSPH requires iterative search between a minimum hash value and a maximum hash value. However, it has to check every single point in the hashmap chaining. This means that the search is not only the head nodes in the hashmap but also every data item that is stored in the linked list. Therefore, it creates a lot of computational overhead. 
+
+\subsection{KNN Query Performance}
+
+\begin{center}
+\begin{adjustbox}{max width={\textwidth}, max totalheight={\textheight},keepaspectratio}
+\begin{threeparttable}
+\caption{Average KNN Query Time}
+\begin{tabular}{c|c c c}
+    \toprule
+                        % & \multicolumn{3}{c}{Dataset} \\\midrule \midrule
+                                    &\texttt{post}      & \texttt{g2} & \texttt{osm}             \\ \midrule 
+    \textbf{average query time}       & 16.407ms & 0.008ms  & 434.478ms   \\
+    \bottomrule
+\end{tabular}
+% \begin{tablenotes}
+% \item[1] $\text{load factor} = \frac{n}{k}$, where n is the total number of entries, and k is the size of hashmap;
+% \end{tablenotes}
+\end{threeparttable}
+\label{table:knn}
+\end{adjustbox}
+\end{center}
+We generate 1000 queries from randomly selected points from each dataset to test KNN query performance in LSPH. Figure \ref{table:knn} shows the average total query time result from the 1000 queries. Since our KNN algorithm scans through the entire dataset and returns the top k value from a priority queue, the speed is approximately the same for all k values. This is not the most efficient algorithm to find $k$ closest neighbours. However, it only takes 16ms to scan the entire \texttt{post} dataset, 0.008ms for the \texttt{g2}, and 434.478ms for the \texttt{osm}. This performance of KNN query time is similar to the time performance to scan the entire dataset. Due to the scope of the study is to focus on the two-dimensional data objects, the KNN query performance cannot provide a comprehensive view of the capability of LSPH. Further improvements need to be made to the KNN algorithm to complete this task more efficiently. 
 
 
 \subsection{Load Factor and Query Performance}
@@ -157,5 +180,9 @@ Therefore, a higher load factor in the learned hashmap can achieve a better quer
 
 
 \section{Summary}
+In general, the performance of LSPH is well-balanced between query time and memory assumption. Especially, the point query time outperformed the traditional index R-Tree by up to $8\times$, and over the ZM index by up to $40\times$. LSPH shows that its advantage in single point finding, in which the simplicity of its structure is aiming to find the two-dimensional data point straight from hash function and hashmap chaining scans. It is much more efficient than certain complex data routing algorithm designs in hierarchical structures. The runtime memory of LSPH is similar to traditional R-Tree, but storage memory is not as efficient as the ZM index. However, LSPH has shown more robust performance in accuracy when compared to the ZM index. The build time of LSPH is also efficient in certain datasets. Since we used a linear model in the ZM index, the build time of the ZM index is better than LSPH in two of the three datasets. If a neural network is used in the experiments, it could increase the training time of the ZM index.
+
+
+LSPH demonstrated that it combines performance advantages from traditional data indexes and novel learned indexes. It is more efficient than R-Tree, and more robust than the ZM index. However, LSPH is not perfect. One of the drawbacks is that LSPH does not handle range queries and KNN queries efficiently. The weak range query performance in LSPH might be due to the linear expansion scan in a flat structure, whereas the R-Tree can take advantage of hierarchical relationships to execute the query more efficiently. The KNN algorithm is also not efficient cause the scanning process takes the length of the entire dataset. There also is a limitation for LSPH handling skewed data distributions. Selecting single-dimensional values in LSPH can avoid certain cases of skewed data in two-dimensional space, but it performs poorly in cluster shape data distribution that both axes are skewed. Even the performance of LSPH on the skewed data is declined, but it will not be affected by the large error bounds in terms of accuracy, which can still guarantee to find query results 100\%.
 
 
