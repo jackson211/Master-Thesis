@@ -427,8 +427,10 @@ Both Wang \cite{Wang:2019ks} and Nathan \cite{Nathan:2019wc} represent multidime
 
 The learned ZM index is trying to solve multidimensional problems in a one-dimensional way. The z-order curve or z-address is aiming to solve the consistency of simultaneously ordered spatial data on different dimensions. Interleaving bits of two-point value in a coordinate can convert the multidimensional data into one dimension. Applying the learned index model from Kafle \cite{Kafle:2017dy}, we could achieve a similar result as the learned B-Tree model. 
 
-The advantage\cite{Ding:2020we} of the Flood is that the query performance can be boosted by automatically adjusting the number of partitions in each dimension. The more partitions in the data space, the fewer points are needed to be scanned. A drawback of Flood is that it is not optimized for skewed data. For a query that is non-uniform, it will scan a large range of points until reaching the result. 
+Another problem with existing spatial indexes is that many of them lack support for spatial queries. The ZM index supports range queries but does not support KNN queries. Flood uses range scans for query processing, and it still does not support the KNN query. Qd-tree uses decision trees for routing data, which is also naturally difficult to support with range and KNN query. 
 
+
+Finally, the build time for the recursive model indexes can also be a problem. Generally, to train a simple linear regression model or neural network with few layers does not require a long training time. However, if a complex neural network is used in the root node and the subnodes, the build time for the entire recursive model index will be high. It might take up to hours to build a single index that can predict accurately, depending on the dataset. 
 
 \begin{adjustbox}{width={\textwidth}, totalheight={\textheight},keepaspectratio}%
 \footnotesize
@@ -480,7 +482,7 @@ The advantage\cite{Ding:2020we} of the Flood is that the query performance can b
 \midrule
 \ex{Top-down Construction} {222220}{22000}{22220222} \\
 \ex{Bottom-up Construction} {000002}{00222}{00002000} \\
-\ex{Single-pass Training} {222221}{00222}{00000000} \\
+\ex{Single-pass Training} {222221}{11222}{10000000} \\
 \ex{Linear Structure} {020000}{00010}{00000000} \\
 \ex{Hierarchical Structure} {002222}{22202}{22002022} \\
 \ex{Grid Layout} {200000}{00000}{00220201} \\
@@ -527,6 +529,8 @@ $\text{\feature0}=\text{does not provide features}$;
 From this review, we have perceived the background knowledge and design flows of some popular traditional spatial indexes, the learned index for one-dimensional data and current state-of-art learned spatial indexes. There are no perfect index methods, each method has its strengths and weaknesses. 
 
 To design a learned spatial index, we might consider some recipes from the current learned models and spatial indexes. The learned CDF curve can map an approximate shape of data distribution. Finding a fuzzy position of key only costs a complexity of prediction depending on the model. Transformation techniques in the spatial index provide a way to convert multidimensional spatial objects into one-dimensional data. Both ZM and RSMI applied Z-order space-filling curves in their models, so we can store spatial data in one-dimensional index fashion. Overlapping regions can handle complex operations for spatial queries, but overlapping areas can lead to searching on redundant paths in a hierarchical structure like R-Tree and even in the RMI. 
+
+The advantage\cite{Ding:2020we} of the Flood is that the query performance can be boosted by automatically adjusting the number of partitions in each dimension. The more partitions in the data space, the fewer points are needed to be scanned. A drawback of Flood is that it is not optimized for skewed data. For a query that is non-uniform, it will scan a large range of points until reaching the result. Tsunami addresses this issue by correlating data to reduce the data skewness. 
 
 Most learned indexes are trying to optimize between space and time. The RMI looks for the position key regarding an upper bound and a lower bound. This bounded range can be large if the model under-fits the data. However, to train a well-fitted model, it requires more training time and more complex models. A complex model can be more expensive when inference during searching.  The PGM-index offers a flexible turning strategy for either optimizing space for a query time constraint or optimizing query time for a space constraint. It is done by controlling the number of segments in the model. Radix spline’s approach to this problem is to build a separate Radix table to look up a range of query points. The size of the Radix table can grow larger with the increase of query precision. 
 
