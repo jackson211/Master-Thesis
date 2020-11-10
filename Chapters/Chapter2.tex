@@ -16,21 +16,21 @@ Overall, designing an efficient, functional and dynamic spatial index requires c
 We are assuming all the spatial queries are performing in two-dimensional spatial plane space. 
 
 \begin{query}\label{def:pmq}
-Point Match Query: given a point $p$ with a coordinate $(x, y)$ in the spatial extent ${p_{x, y}} \subseteq {E^d}$, find a exact point $p'$ within the same spatial extent as the $p$:
+\textbf{Point Match Query}: given a point $p$ with a coordinate $(x, y)$ in the spatial extent ${p_{x, y}} \subseteq {E^d}$, find a exact point $p'$ within the same spatial extent as the $p$:
 \[PMQ(p) = \{p|p'.x = p.x \land p'.y = p.y\}.\]
 \end{query}
 
 The most important and frequently used query in spatial data is the point match query. The Point Match Query searches for a spatial point for given coordinates, and it is a fundamental query for more complex queries.
 
 \begin{query}\label{def:rq}
-Range Query: given a two-dimensional area of interest $R = [p_{x_{min}}, p_{y_{min}}] \times [p_{x_{max}}, p_{y_{max}}]$, where $[p_{x_{min}}, p_{y_{min}}]$ is the coordinate of the lower-left corner of the bounding box, and $[p_{x_{max}}, p_{y_{max}}]$ is the coordinate of the upper-right corner of the bounding box. Find all points $p$ within or overlapping with the range $R$:
+\textbf{Range Query}: given a two-dimensional area of interest $R = [p_{x_{min}}, p_{y_{min}}] \times [p_{x_{max}}, p_{y_{max}}]$, where $[p_{x_{min}}, p_{y_{min}}]$ is the coordinate of the lower-left corner of the bounding box, and $[p_{x_{max}}, p_{y_{max}}]$ is the coordinate of the upper-right corner of the bounding box. Find all points $p$ within or overlapping with the range $R$:
 \[RQ(r) = \{p|(p_x, p_y) \cap R \neq \emptyset\}.\]
 \end{query}
 
 The Range Query retrieves multiple spatial objects that are within a window. The shape of a window is usually a rectangle, but it can be in other forms of shapes with arbitrarily unparalleled lines.
 
 \begin{query}\label{def:nnq}
-Nearest-Neighbor Query: given a point $p$ with spatial space $p\subseteq{E^d}$, find $k$ points $p'$ having a minimum distance from $p$:
+\textbf{Nearest-Neighbor Query}: given a point $p$ with spatial space $p\subseteq{E^d}$, find $k$ points $p'$ having a minimum distance from $p$:
 \[NNQ(p) = \{p'|\forall p'':dist(p', p) \leq dist(p', p'')\}.\]
 \end{query}
 

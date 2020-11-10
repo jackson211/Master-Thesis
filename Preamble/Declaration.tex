@@ -2,6 +2,8 @@
 % Guidelines as of 2019/06/04
 % https://gradresearch.unimelb.edu.au/__data/assets/pdf_file/0004/2027839/Preparation-of-GR-theses-rules.pdf
 %
+\newcommand{\raisedrule}[2][0em]{\leaders\hbox{\rule[#1]{1pt}{#2}}\hfill}
+
 \Declaration{
 
 \addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
@@ -18,9 +20,16 @@ I certify that:
 \end{itemize}
  
  
-Signed:\\
-\rule[1em]{25em}{0.5pt}  % This prints a line for the signature
+\vspace*{0.30cm} 
+  \underline{Signed: \makebox[260pt][l]{}} \ %
+  
+% Signed:\\
+% \rule[1em]{25em}{0.5pt}  % This prints a line for the signature
  
-Date:\\
-\rule[1em]{25em}{0.5pt}  % This prints a line to write the date
+% Date:\\ 
+% \rule[1em]{25em}{0.5pt}  % This prints a line to write the date
+
+\vspace*{0.30cm} 
+  \underline{Date: \makebox[260pt][l]{  \today}} \ %
+
 }
